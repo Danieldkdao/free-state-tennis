@@ -4,22 +4,28 @@ import Image from "next/image";
 import React, { useState } from "react";
 import Logo from "@/public/free-state-logo.png";
 import Link from "next/link";
-import { FaBars, FaArrowLeft } from "react-icons/fa6";
+import { FaBars, FaArrowLeft, FaRightToBracket } from "react-icons/fa6";
 
 const Navbar = () => {
   const [toggleMenu, setToggleMenu] = useState(false);
 
   return (
-    <div className="w-full flex free-green-bg p-5 items-center justify-center">
-      <div className="w-full flex items-center justify-between max-w-[700px]">
+    <div className="w-full flex p-5 items-center justify-between">
+      <div className="flex items-center gap-4">
+        <Link href="https://www.freestateathletics.com/" target="_blank">
+          <Image
+            src={Logo}
+            alt="Free state logo"
+            height={70}
+            width={70}
+            className="mr-15"
+          />
+        </Link>
         <Link href="/" className="text-2xl font-bold sm:block hidden">
           Home
         </Link>
         <Link href="/roster" className="text-2xl font-bold sm:block hidden">
           Roster
-        </Link>
-        <Link href="https://www.freestateathletics.com/" target="_blank">
-          <Image src={Logo} alt="Free state logo" height={70} width={70} />
         </Link>
         <Link href="/schedule" className="text-2xl font-bold sm:block hidden">
           Schedule
@@ -27,11 +33,19 @@ const Navbar = () => {
         <Link href="/news" className="text-2xl font-bold sm:block hidden">
           News
         </Link>
+      </div>
+      <div className="flex items-center justify-center gap-2">
         <button
           onClick={() => setToggleMenu(true)}
           className="cursor-pointer sm:hidden hover:opacity-50 active:scale-85 transition-all duration-200 ease-in-out"
         >
           <FaBars size={40} />
+        </button>
+        <button
+          onClick={() => setToggleMenu(true)}
+          className="cursor-pointer transition-all duration-200 ease-in-out"
+        >
+          <FaRightToBracket size={40} />
         </button>
       </div>
       <div

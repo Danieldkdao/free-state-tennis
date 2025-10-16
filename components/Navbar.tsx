@@ -10,7 +10,7 @@ const Navbar = () => {
   const [toggleMenu, setToggleMenu] = useState(false);
 
   return (
-    <div className="w-full flex p-5 items-center justify-between">
+    <div className="w-full flex p-5 items-center justify-between top-0 sticky">
       <div className="flex items-center gap-4">
         <Link href="https://www.freestateathletics.com/" target="_blank">
           <Image

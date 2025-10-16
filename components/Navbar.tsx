@@ -10,7 +10,7 @@ const Navbar = () => {
   const [toggleMenu, setToggleMenu] = useState(false);
 
   return (
-    <div className="w-full flex p-5 items-center justify-between top-0 sticky">
+    <div className="w-full flex p-5 items-center justify-between top-0 sticky bg-white z-[10000]">
       <div className="flex items-center gap-4">
         <Link href="https://www.freestateathletics.com/" target="_blank">
           <Image
@@ -42,7 +42,6 @@ const Navbar = () => {
           <FaBars size={40} />
         </button>
         <button
-          onClick={() => setToggleMenu(true)}
           className="cursor-pointer transition-all duration-200 ease-in-out"
         >
           <FaRightToBracket size={40} />

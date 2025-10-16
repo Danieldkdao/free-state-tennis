@@ -1,3 +1,4 @@
+import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import { ReactNode } from "react";
 
@@ -8,6 +9,7 @@ const MainLayout = ({ children }: { children: ReactNode }) => {
       <div className="w-[95%] md:w-[90%] lg:w-[85%] flex items-center justify-center">
         {children}
       </div>
+      <Footer />
     </div>
   );
 };

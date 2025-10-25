@@ -11,14 +11,14 @@ const Navbar = () => {
 
   return (
     <div className="w-full flex p-5 items-center justify-between top-0 sticky bg-white z-[10000]">
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-8">
         <Link href="https://www.freestateathletics.com/" target="_blank">
           <Image
             src={Logo}
             alt="Free state logo"
             height={70}
             width={70}
-            className="mr-15"
+            className="mr-10"
           />
         </Link>
         <Link href="/" className="text-2xl font-bold sm:block hidden">
@@ -40,11 +40,6 @@ const Navbar = () => {
           className="cursor-pointer sm:hidden hover:opacity-50 active:scale-85 transition-all duration-200 ease-in-out"
         >
           <FaBars size={40} />
-        </button>
-        <button
-          className="cursor-pointer transition-all duration-200 ease-in-out"
-        >
-          <FaRightToBracket size={40} />
         </button>
       </div>
       <div

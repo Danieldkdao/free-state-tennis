@@ -131,7 +131,7 @@ const Home = () => {
             <div className="free-green-bg flex flex-col items-center gap-10 py-20 px-15 w-full max-w-[550px]">
               <h1 className="text-4xl font-bold text-white">Our Mission</h1>
               <p className="text-white text-center">
-                Lawrence High School Tennis is dedicated to fostering a love for
+                Free State High School Tennis is dedicated to fostering a love for
                 tennis and teamwork. We aim to achieve excellence on and off the
                 court while building our community's support for our talented
                 athletes.
@@ -189,7 +189,7 @@ const Home = () => {
           </div>
         </div>
         <div className="max-w-full flex flex-col gap-8">
-          <h1 className="text-4xl font-bold">Rewind</h1>
+          <h1 className="text-4xl font-bold">Gallery</h1>
           <Marquee speed={60} pauseOnHover={true}>
             {infiniteRow.map((item, index) => {
               return <div className="mx-5 h-full">

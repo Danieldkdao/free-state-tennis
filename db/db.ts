@@ -2,14 +2,13 @@ import mongoose from "mongoose";
 
 const MONGODB_URI = process.env.DATABASE_URL!;
 
-if (!MONGODB_URI)
-  throw new Error(
-    "Please define the mongo db database connection string inside the environment variables."
-  );
-
 let cached = (global as any).mongoose || { conn: null, promise: null };
 
 export const connectDB = async () => {
+  if (!MONGODB_URI)
+    throw new Error(
+      "Please define the mongo db database connection string inside the environment variables."
+    );
   try {
     if (cached.conn) return cached.conn;
 
@@ -30,6 +29,8 @@ export const connectDB = async () => {
       return cached.conn;
     }
   } catch (error) {
+    console.error("MongoDB connection error:", error);
+    cached.promise = null;
     console.error(error);
   }
 };

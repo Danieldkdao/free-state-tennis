@@ -7,22 +7,21 @@ type Team =
   | "Girls Junior Varsity";
 
 export interface IEvent extends Document {
-  date: string;
-  time: string;
+  _id: string;
+  datetime: string;
   team: Team;
   away: boolean;
   opponent: string;
-  image: string;
+  image: string | null;
   location: string;
 }
 
 const EventSchema = new Schema<IEvent>({
-  date: { type: String, required: true },
-  time: { type: String, required: true },
+  datetime: { type: String, required: true },
   team: { type: String, required: true },
   away: { type: Boolean, required: true },
   opponent: { type: String, required: true },
-  image: { type: String, required: true },
+  image: { type: String || null },
   location: { type: String, required: true },
 });
 

@@ -1,11 +1,11 @@
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
-import React from "react";
+
 import Placeholder1 from "@/public/placeholder-1.png";
 import Placeholder2 from "@/public/placeholder-2.png";
 import FreeStateLogo from "@/public/free-state-logo.png";
 import LionsLogo from "@/public/chestylogo.png";
-import RacketsWhite from '@/public/racket-cross-icon-white.png';
+import RacketsWhite from "@/public/racket-cross-icon-white.png";
 import Image from "next/image";
 import { FaArrowRight, FaCalendar, FaEye, FaX } from "react-icons/fa6";
 import Marquee from "react-fast-marquee";
@@ -48,11 +48,11 @@ const Home = () => {
   ];
 
   const infiniteRow = [
-    <Image src={Placeholder2} alt="Placeholder image 2"/>,
-    <Image src={Placeholder2} alt="Placeholder image 2"/>,
-    <Image src={Placeholder2} alt="Placeholder image 2"/>,
-    <Image src={Placeholder2} alt="Placeholder image 2"/>,
-  ]
+    <Image src={Placeholder2} alt="Placeholder image 2" />,
+    <Image src={Placeholder2} alt="Placeholder image 2" />,
+    <Image src={Placeholder2} alt="Placeholder image 2" />,
+    <Image src={Placeholder2} alt="Placeholder image 2" />,
+  ];
 
   return (
     <div className="w-full flex flex-col items-center justify-center">
@@ -131,10 +131,10 @@ const Home = () => {
             <div className="free-green-bg flex flex-col items-center gap-10 py-20 px-15 w-full max-w-[550px]">
               <h1 className="text-4xl font-bold text-white">Our Mission</h1>
               <p className="text-white text-center">
-                Free State High School Tennis is dedicated to fostering a love for
-                tennis and teamwork. We aim to achieve excellence on and off the
-                court while building our community's support for our talented
-                athletes.
+                Free State High School Tennis is dedicated to fostering a love
+                for tennis and teamwork. We aim to achieve excellence on and off
+                the court while building our community's support for our
+                talented athletes.
               </p>
             </div>
           </div>
@@ -192,9 +192,7 @@ const Home = () => {
           <h1 className="text-4xl font-bold">Gallery</h1>
           <Marquee speed={60} pauseOnHover={true}>
             {infiniteRow.map((item, index) => {
-              return <div className="mx-5 h-full">
-                {item}
-              </div>;
+              return <div className="mx-5 h-full">{item}</div>;
             })}
           </Marquee>
         </div>

@@ -2,7 +2,7 @@
 
 import { z } from "zod";
 import Image from "next/image";
-import React from "react";
+
 import Logo from "@/public/free-state-logo.png";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -33,25 +33,24 @@ const AdminLoginPage = () => {
   const handleLogin = async ({ email, password }: LoginForm) => {
     try {
       const response = await api.post(
-      "/admin/login",
-      { email, password },
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
+        "/admin/login",
+        { email, password },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      if (response.data.success) {
+        router.push("/admin/dashboard/add-players");
+        return toast.success(response.data.message);
       }
-    );
-    if(response.data.success){
-      router.push("/admin/dashboard/add-players");
-      return toast.success(response.data.message);
-    }
-    console.log(Object.keys(response.data));
-    toast.error(response.data.message);
+      console.log(Object.keys(response.data));
+      toast.error(response.data.message);
     } catch (error) {
       console.error(error);
-      toast.error("Something went wrong. Please try again later.")
+      toast.error("Something went wrong. Please try again later.");
     }
-    
   };
 
   return (

@@ -6,11 +6,11 @@ type Comment = {
   createdAt: Date;
 };
 
-export interface IBlog extends Document {
+export interface IAdminNews extends Document {
+  _id: string;
   title: string;
-  lengthOfRead: number | string;
   content: string;
-  image: string;
+  image: string | null;
   views: number;
   comments: Comment[];
   createdAt: Date;
@@ -24,17 +24,17 @@ const CommentSchema = new Schema<Comment>(
   { timestamps: true }
 );
 
-const BlogSchema = new Schema<IBlog>(
+const AdminNewsSchema = new Schema<IAdminNews>(
   {
-    title: { type: String, required: true },
-    lengthOfRead: { type: Number || String },
-    content: { type: String, required: true },
+    title: { type: String },
+    content: { type: String },
     views: { type: Number, default: 0 },
+    image: { type: String },
     comments: { type: [CommentSchema], default: [] },
   },
   { timestamps: true }
 );
 
-const blogModel: Model<IBlog> = mongoose.models.Blog || mongoose.model("Blog", BlogSchema);
+const adminNewsModel: Model<IAdminNews> = mongoose.models.New || mongoose.model("New", AdminNewsSchema);
 
-export default blogModel;
+export default adminNewsModel;

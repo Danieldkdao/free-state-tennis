@@ -1,9 +1,9 @@
 import Image from "next/image";
-import React from "react";
 import UploadAreaImage from "@/public/upload_area.png";
 import Editor from "@/components/editor";
+import { News } from "@/lib/types";
 
-const NewsSSRow = () => {
+const NewsSSRow = ({news}: {news: News}) => {
   return (
     <tr className="border">
       <td>
@@ -14,9 +14,6 @@ const NewsSSRow = () => {
       </td>
       <td className="border">
         <input type="text" id="name" className="py-1 px-2 outline-0" />
-      </td>
-      <td className="border">
-        <input type="number" id="name" className="py-1 px-2 outline-0" />
       </td>
       <td className="border">
         <Editor />

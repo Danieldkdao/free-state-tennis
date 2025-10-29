@@ -1,37 +1,63 @@
-type PlayerClass = "Freshman" | "Sophomore" | "Junior" | "Senior";
+export type Comment = {
+  user: string;
+  comment: string;
+  createdAt: Date;
+};
+
+export type classes = "Freshman" | "Sophomore" | "Junior" | "Senior";
+
+export type playingStyles =
+  | "Unknown"
+  | "Aggressive Baseliner"
+  | "Counter-Puncher"
+  | "Serve and Volley"
+  | "All-Court Player";
+
+export type yearsOnVarsity = 1 | 2 | 3 | 4;
+
+export type isVarsity = "TBD" | "Varsity" | "Junior Varsity";
+
+export type teams = "Boy" | "Girl";
+
+export type Team =
+  | "Boys Varsity"
+  | "Boys Junior Varsity"
+  | "Girls Varsity"
+  | "Girls Junior Varsity";
 
 export type News = {
-  id: string;
-  thumbnailUrl: string;
-  readTimeMinutes: number;
+  _id: string;
   title: string;
   content: string;
+  image: string | null;
   views: number;
-  comments: number;
-  publishDate: string;
+  comments: Comment[];
+  createdAt: Date;
 };
 
 export type Player = {
-  id: number;
+  _id: string;
+  image: string | null;
   name: string;
-  class: PlayerClass;
-  wins: number;
-  losses: number;
-  height: string;
-  playing_style: string;
-  yearsOnVarsity: number;
-  isVarsity: boolean;
-  hometown: string;
   bio: string;
-  gender: "Boy" | "Girl",
-  profileImageUrl: string | null;
+  class: classes;
+  wins: number | null;
+  losses: number | null;
+  heightFt: number | null;
+  heightIn: number | null;
+  playingStyle: playingStyles;
+  yearsOnVarsity: yearsOnVarsity;
+  isVarsity: isVarsity;
+  seasonsPlayed: string[];
+  team: teams;
 };
 
-export type Match = {
-  date: string;
-  time: string;
-  locationType: "Home" | "Away";
-  teamLevel: string;
+export type Event = {
+  _id: string;
+  datetime: string;
+  team: Team;
+  away: boolean;
   opponent: string;
-  venue: string;
+  image: string | null;
+  location: string;
 };

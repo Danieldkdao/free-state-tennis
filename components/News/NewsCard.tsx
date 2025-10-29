@@ -1,12 +1,17 @@
 import Image from "next/image";
-import React from "react";
+
 import Placeholder1 from "@/public/placeholder-1.png";
 import { News } from "@/lib/types";
 import Link from "next/link";
 
+const showDateCreated = (d: Date | string | number) => {
+  const date = new Date(d);
+  return date.toLocaleDateString();
+};
+
 const NewsCard = ({ news }: { news: News }) => {
   return (
-    <Link href={`/news/${news.id}`}>
+    <Link href={`/news/${news._id}`}>
       <div className="flex w-full border">
         <div className="flex-1">
           <Image
@@ -18,13 +23,14 @@ const NewsCard = ({ news }: { news: News }) => {
         <div className="p-5 flex-1 space-y-4">
           <h1 className="text-2xl font-bold">{news.title}</h1>
           <p>
-            {news.publishDate} &middot; {news.readTimeMinutes} min read
+            {showDateCreated(news.createdAt)} &middot; {news.lengthOfRead} min
+            read
           </p>
           <p className="line-clamp-4 mb-10">{news.content}</p>
           <hr />
           <div className="gap-4 flex items-center">
             <p>{news.views} views</p>
-            <p>{news.comments} comments</p>
+            <p>{news.comments.length} comments</p>
           </div>
         </div>
       </div>

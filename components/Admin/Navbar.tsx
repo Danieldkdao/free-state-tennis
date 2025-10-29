@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import Logo from "@/public/free-state-logo.png";
 import Image from "next/image";
 import { FaArrowRightToBracket } from "react-icons/fa6";

@@ -1,4 +1,3 @@
-import React from "react";
 import { type Player } from "@/lib/types";
 import Logo from "@/public/free-state-logo.png";
 import Image from "next/image";
@@ -25,7 +24,7 @@ const PlayerCard = ({ player }: { player: Player }) => {
           Record: {player.wins} | {player.losses}
         </p>
         <Link
-          href={`/roster/player/${player.id}`}
+          href={`/roster/player/${player._id}`}
           className="flex items-center gap-1 cursor-pointer hover:gap-3 transition-all duration-200 ease-in-out"
         >
           <p className="underline">Read More</p>

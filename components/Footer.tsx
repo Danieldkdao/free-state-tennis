@@ -1,8 +1,13 @@
 import Image from "next/image";
-import React from "react";
+
 import Logo from "@/public/free-state-logo.png";
 import Link from "next/link";
-import { FaFacebook, FaSquareXTwitter, FaSquareInstagram, FaTiktok } from "react-icons/fa6";
+import {
+  FaFacebook,
+  FaSquareXTwitter,
+  FaSquareInstagram,
+  FaTiktok,
+} from "react-icons/fa6";
 
 const Footer = () => {
   return (

@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import { FaPeopleGroup, FaFile, FaCalendar } from "react-icons/fa6";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -36,7 +35,10 @@ const AdminSidebar = () => {
         return (
           <Link key={i} href={`/admin/dashboard/${item.link}`}>
             <div
-              className={`flex items-center gap-2 p-2 pl-6 ${isSelected && "bg-gradient-to-r from-green-50 to-green-200 border-r-8 border-green-950"}`}
+              className={`flex items-center gap-2 p-2 pl-6 ${
+                isSelected &&
+                "bg-gradient-to-r from-green-50 to-green-200 border-r-8 border-green-950"
+              }`}
             >
               {item.icon}
               <h1 className="text-lg">{item.text}</h1>

@@ -1,9 +1,12 @@
-import NewsCard from '@/components/News/NewsCard';
-import { news } from '@/app/data';
-import React from 'react'
+import NewsCard from '@/components/news/NewsCard';
+import newsModel from '@/db/schemas/newsModel';
 
-const NewsPage = () => {
-  
+const NewsPage = async () => {
+  const data = await newsModel.find();
+  if(!data.length) {
+    return <h1>No news found</h1>
+  }
+  const news = data.map(item => item.toObject());
 
   return (
     <div className="w-full mt-8 space-y-4">

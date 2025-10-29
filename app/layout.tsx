@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
+import { PlayerContextProvider } from "@/hooks/usePlayer";
 
 export const metadata: Metadata = {
   title: "Free State Firebirds Tennis",
@@ -16,8 +17,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        {children}
-        <Toaster />
+        <PlayerContextProvider>
+          {children}
+          <Toaster />
+        </PlayerContextProvider>
       </body>
     </html>
   );

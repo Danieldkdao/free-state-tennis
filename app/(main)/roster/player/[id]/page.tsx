@@ -1,5 +1,5 @@
 import { data } from "@/app/data";
-import React from "react";
+
 import { FaCircleXmark } from "react-icons/fa6";
 import Logo from "@/public/free-state-logo.png";
 import Image from "next/image";

@@ -1,12 +1,13 @@
-import { data } from "@/app/data";
-
+import { connectDB } from "@/db/db";
+import playerModel from "@/db/schemas/playerSchema";
 import { FaCircleXmark } from "react-icons/fa6";
 import Logo from "@/public/free-state-logo.png";
 import Image from "next/image";
 
 const PlayerPage = async ({ params }: { params: Promise<{ id: string }> }) => {
   const { id } = await params;
-  const player = data.filter((item) => item.id === Number(id))[0];
+  await connectDB();
+  const player = await playerModel.findById(id).lean();
   if (!player)
     return (
       <div className="w-full flex flex-col items-center justify-center gap-4 h-screen">
@@ -22,14 +23,18 @@ const PlayerPage = async ({ params }: { params: Promise<{ id: string }> }) => {
     <div className="w-full mt-8 mb-24">
       <div className="w-full flex gap-4">
         <div className="flex-2 border p-5 flex gap-4">
-          <Image src={Logo} alt="Free state logo" className="object-cover" />
+          <Image
+            src={player.image || Logo}
+            alt={player.name}
+            width={200}
+            height={200}
+            className="object-cover"
+          />
           <div className="flex flex-col gap-4 w-full">
             <div className="w-full">
               <div className="w-full flex items-center justify-between">
                 <h1 className="text-2xl font-bold">{player.name}</h1>
-                <p className="font-bold">
-                  {player.isVarsity ? "Varsity" : "Junior Varsity"}
-                </p>
+                <p className="font-bold">{player.isVarsity}</p>
               </div>
               <p>{player.class}</p>
             </div>
@@ -43,11 +48,13 @@ const PlayerPage = async ({ params }: { params: Promise<{ id: string }> }) => {
               </div>
               <div>
                 <h1 className="text-xl">Playing Style</h1>
-                <p>{player.playing_style}</p>
+                <p>{player.playingStyle}</p>
               </div>
               <div>
                 <h1 className="text-xl">Height</h1>
-                <p>{player.height}</p>
+                <p>
+                  {player.heightFt || player.heightIn ? `${player.heightFt}' ${player.heightIn}` : "Unknown"}
+                </p>
               </div>
             </div>
             <div className="w-full grid grid-cols-3">
@@ -56,8 +63,8 @@ const PlayerPage = async ({ params }: { params: Promise<{ id: string }> }) => {
                 <p>{player.yearsOnVarsity}</p>
               </div>
               <div>
-                <h1 className="text-xl">Hometown</h1>
-                <p>{player.hometown}</p>
+                <h1 className="text-xl">Seasons Played</h1>
+                <p>{player.seasonsPlayed.join(", ")}</p>
               </div>
             </div>
           </div>

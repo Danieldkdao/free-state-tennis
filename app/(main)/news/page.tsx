@@ -1,7 +1,9 @@
 import NewsCard from '@/components/news/NewsCard';
+import { connectDB } from '@/db/db';
 import newsModel from '@/db/schemas/newsModel';
 
 const NewsPage = async () => {
+  await connectDB();
   const data = await newsModel.find();
   if(!data.length) {
     return <h1>No news found</h1>

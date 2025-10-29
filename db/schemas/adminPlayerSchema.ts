@@ -48,6 +48,6 @@ const AdminPlayerSchema = new Schema<IAdminPlayer>({
   team: { type: String, required: true },
 });
 
-const adminPlayerModel: Model<IAdminPlayer> = mongoose.models.Player || mongoose.model("Player", AdminPlayerSchema);
+const adminPlayerModel: Model<IAdminPlayer> = mongoose.models.AdminPlayer || mongoose.model("AdminPlayer", AdminPlayerSchema);
 
 export default adminPlayerModel;

@@ -4,19 +4,39 @@ import Logo from "@/public/free-state-logo.png";
 import Image from "next/image";
 
 const Event = ({ event }: { event: EventType }) => {
+
+  const splitDatetime = (t: string) => {
+    const newate = new Date(t);
+    const time = new Intl.DateTimeFormat("en-US", {
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+    }).format();
+    const date = new Intl.DateTimeFormat("en-US", {
+      weekday: "long",
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+    }).format();
+    return { time, date };
+  }
+
+  const time = event.datetime ? splitDatetime(event.datetime).time : "Not defined";
+  const date = event.datetime ? splitDatetime(event.datetime).date : "Not defined";
+
   return (
     <div className="w-full border p-5 space-y-4">
       <div className="w-full flex items-center justify-between">
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
             <FaCalendar />
-            <h1 className="font-medium">{event.date}</h1>
+            <h1 className="font-medium">{date}</h1>
           </div>
           <h1>{event.away ? "Away" : "Home"}</h1>
         </div>
         <div className="flex items-center gap-2">
           <FaClock />
-          <h1 className="font-medium">{event.time}</h1>
+          <h1 className="font-medium">{time}</h1>
         </div>
       </div>
       <hr />

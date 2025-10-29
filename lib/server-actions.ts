@@ -3,6 +3,9 @@
 import adminPlayerModel from "@/db/schemas/adminPlayerSchema";
 import adminEventModel from "@/db/schemas/adminEventModel";
 import adminNewsModel from "@/db/schemas/adminNewsModel";
+import playerModel from "@/db/schemas/playerSchema";
+import eventModel from "@/db/schemas/eventModel";
+import newsModel from "@/db/schemas/newsModel";
 import { Event, News, Player } from "./types";
 import { connectDB } from "@/db/db";
 import { revalidatePath } from "next/cache";
@@ -86,5 +89,48 @@ export const updateNewsData = async (id: string, data: Partial<News>) => {
   return {
     success: true,
     message: "Admin news spreadsheet updated successfully!",
+  };
+};
+
+export const publish = async (type: "player" | "event") => {
+  await connectDB();
+  if (type === "player") {
+    const adminPlayers = await adminPlayerModel.find({}).lean();
+    const validPlayers = adminPlayers.filter((p) => {
+      return p.name.trim() !== "" && p.bio.trim() !== "";
+    });
+
+    await playerModel.deleteMany({});
+    if (validPlayers.length > 0) {
+      await playerModel.insertMany(validPlayers);
+    } else {
+      return {
+        success: false,
+        message: "Make sure the name and bio fields are filled in.",
+      };
+    }
+    revalidatePath("/roster");
+    revalidatePath("/admin/dashboard/players");
+  } else if (type === "event") {
+    const adminEvents = await adminEventModel.find({}).lean();
+    const validEvents = adminEvents.filter((e) => {
+      return e.datetime && e.opponent !== "" && e.location !== "";
+    });
+
+    await eventModel.deleteMany({});
+    if (validEvents.length > 0) {
+      await eventModel.insertMany(validEvents);
+    } else {
+      return {
+        success: false,
+        message: "Make sure that there is a date, an opponent, and a location for each event.",
+      };
+    }
+    revalidatePath("/schedule");
+    revalidatePath("/admin/dashboard/events");
+  }
+  return {
+    success: true,
+    message: "Published successfully!",
   };
 };

@@ -6,7 +6,7 @@ import playerModel from "@/db/schemas/playerSchema";
 const RosterPage = async () => {
   await connectDB();
   const data = await playerModel.find();
-  const players = data.map((item) => item.toObject());
+  const players = data.map((item) => JSON.parse(JSON.stringify(item)));
 
   return (
     <div className="w-full flex flex-col gap-8 mt-8">

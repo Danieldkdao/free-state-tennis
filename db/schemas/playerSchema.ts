@@ -48,6 +48,6 @@ const PlayerSchema = new Schema<IPlayer>({
   team: { type: String, required: true },
 });
 
-const playerModel: Model<IPlayer> = mongoose.models?.Player || mongoose.model("Player", PlayerSchema);
+const playerModel: Model<IPlayer> = mongoose.models.Player || mongoose.model("Player", PlayerSchema);
 
 export default playerModel;

@@ -35,6 +35,6 @@ const AdminNewsSchema = new Schema<IAdminNews>(
   { timestamps: true }
 );
 
-const adminNewsModel: Model<IAdminNews> = mongoose.models.New || mongoose.model("New", AdminNewsSchema);
+const adminNewsModel: Model<IAdminNews> = mongoose.models.AdminNew || mongoose.model("AdminNew", AdminNewsSchema);
 
 export default adminNewsModel;

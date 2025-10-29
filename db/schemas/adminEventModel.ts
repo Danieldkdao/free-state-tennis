@@ -26,6 +26,6 @@ const AdminEventSchema = new Schema<IAdminEvent>({
 });
 
 const adminEventModel: Model<IAdminEvent> =
-  mongoose.models.Event || mongoose.model("Event", AdminEventSchema);
+  mongoose.models.AdminEvent || mongoose.model("AdminEvent", AdminEventSchema);
 
 export default adminEventModel;

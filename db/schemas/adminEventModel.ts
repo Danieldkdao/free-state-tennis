@@ -6,22 +6,35 @@ type Team =
   | "Girls Varsity"
   | "Girls Junior Varsity";
 
+export type Image = {
+  url: string;
+  publicId: string;
+};
+
 export interface IAdminEvent extends Document {
   _id: string;
   datetime: string;
   team: Team;
   away: boolean;
   opponent: string;
-  image: string | null;
+  image: Image | null;
   location: string;
 }
+
+export const ImageSchema = new Schema<Image>(
+  {
+    url: { type: String, required: true },
+    publicId: { type: String, required: true },
+  },
+  { _id: false }
+);
 
 const AdminEventSchema = new Schema<IAdminEvent>({
   datetime: { type: String },
   team: { type: String },
   away: { type: Boolean },
   opponent: { type: String },
-  image: { type: String || null },
+  image: { type: ImageSchema || null },
   location: { type: String },
 });
 

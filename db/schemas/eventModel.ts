@@ -1,4 +1,5 @@
 import mongoose, { Document, Schema, Model } from "mongoose";
+import { Image, ImageSchema } from "./adminEventModel";
 
 type Team =
   | "Boys Varsity"
@@ -12,7 +13,7 @@ export interface IEvent extends Document {
   team: Team;
   away: boolean;
   opponent: string;
-  image: string | null;
+  image: Image | null;
   location: string;
 }
 
@@ -21,7 +22,7 @@ const EventSchema = new Schema<IEvent>({
   team: { type: String, required: true },
   away: { type: Boolean, required: true },
   opponent: { type: String, required: true },
-  image: { type: String || null },
+  image: { type: ImageSchema || null },
   location: { type: String, required: true },
 });
 

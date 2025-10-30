@@ -3,9 +3,14 @@ import newsModel from "@/db/schemas/newsModel";
 import { FaCircleXmark, FaPaperPlane } from "react-icons/fa6";
 import Image from "next/image";
 import Placeholder1 from "@/public/placeholder-1.png";
+import { load } from 'cheerio';
 
-const NewsContentPage = async ({ params }: { params: { id: string } }) => {
-  const { id } = params;
+const NewsContentPage = async ({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) => {
+  const { id } = await params;
   await connectDB();
   const newsContent = await newsModel.findById(id).lean();
   if (!newsContent)
@@ -19,17 +24,17 @@ const NewsContentPage = async ({ params }: { params: { id: string } }) => {
         </p>
       </div>
     );
+
   return (
-    <div className="mt-8 flex items-center justify-center">
+    <div className="mt-8 flex items-center justify-center w-full">
       <div className="w-[65%] p-10 border space-y-4">
         <div className="space-y-2">
           <h1 className="text-4xl font-bold">{newsContent.title}</h1>
           <p>
-            {new Date(newsContent.createdAt).toLocaleDateString()} &middot;{" "}
-            {Math.ceil(newsContent.content.length / 1000)} min read
+            {new Date(newsContent.createdAt).toLocaleDateString()}
           </p>
         </div>
-        <p>{newsContent.content}</p>
+        <div dangerouslySetInnerHTML={{ __html: newsContent.content }} className="format-text"></div>
         {newsContent.image ? (
           <Image
             src={newsContent.image}

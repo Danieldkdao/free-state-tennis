@@ -3,12 +3,18 @@
 import Image from "next/image";
 import UploadAreaImage from "@/public/upload_area_player.png";
 import { Player } from "@/lib/types";
-import { useEffect, useRef, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import useDebouncedValue from "@/hooks/useDebouncedValue";
-import { deletePlayerRow, updatePlayerData } from "@/lib/server-actions";
+import {
+  deletePlayerRow,
+  saveImagePlayers,
+  updatePlayerData,
+  getSignature,
+} from "@/lib/server-actions";
 import { usePlayer } from "@/hooks/usePlayer";
 import { FaTrash } from "react-icons/fa6";
 import toast from "react-hot-toast";
+import { UploadApiResponse } from "cloudinary";
 
 export const classes = ["Freshman", "Sophomore", "Junior", "Senior"];
 
@@ -28,18 +34,19 @@ export const genders = ["Boy", "Girl"];
 
 const PlayerSSRow = ({ player }: { player: Player }) => {
   const [formData, setFormData] = useState(player);
+  const [file, setFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(player.image?.url || null);
 
   const { setIsSaving, setLastSaved } = usePlayer();
 
   const debouncedFormData = useDebouncedValue(formData, 1000);
+  const debouncedFile = useDebouncedValue(file, 1000);
 
-  const firstRender = useRef(true);
+  const hasChangedFormData = useRef(false);
+  const hasChangedFile = useRef(false);
 
   useEffect(() => {
-    if (firstRender.current) {
-      firstRender.current = false;
-      return;
-    }
+    if (!hasChangedFormData.current) return;
     const saveToDatabase = async () => {
       setIsSaving(true);
       try {
@@ -55,14 +62,76 @@ const PlayerSSRow = ({ player }: { player: Player }) => {
     saveToDatabase();
   }, [debouncedFormData]);
 
-  const handleChange = (
-    field: keyof Player,
-    value: string | number | null
-  ) => {
+  useEffect(() => {
+    if (!hasChangedFile.current) return;
+    const saveFileToDatabase = async () => {
+      setIsSaving(true);
+      try {
+        const signatureResponse = await getSignature();
+        if ("error" in signatureResponse) {
+          toast.error("Failed to make signature.");
+          throw new Error(signatureResponse.error);
+        }
+        const { timestamp, signature } = signatureResponse;
+        const formData = new FormData();
+        formData.append("file", file as Blob);
+        formData.append("api_key", process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY!);
+        formData.append("timestamp", timestamp.toString());
+        formData.append("signature", signature);
+        formData.append("folder", "free-state-tennis");
+
+        const endpoint = `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`;
+
+        const cloudinaryResponse = await fetch(endpoint, {
+          method: "POST",
+          body: formData,
+        });
+        if (!cloudinaryResponse.ok) {
+          const errorData = await cloudinaryResponse.json();
+          toast.error(errorData.error.message);
+          console.log(errorData.error.message);
+          throw new Error(
+            "Failed to upload cloudinary image: ",
+            errorData.error.message
+          );
+        }
+        const cloudinaryData: UploadApiResponse =
+          await cloudinaryResponse.json();
+        const url = cloudinaryData.secure_url;
+        const publicId = cloudinaryData.public_id;
+
+        const response = await saveImagePlayers(player._id, { url, publicId });
+        if(!response.success){
+          toast.error("Failed to save image.");
+          throw new Error("Failed to save image.");
+        }
+        setLastSaved(new Date());
+      } catch (error) {
+        console.error("Failed to save: ", error);
+      } finally {
+        setIsSaving(false);
+      }
+    };
+
+    saveFileToDatabase();
+  }, [debouncedFile]);
+
+  const handleChange = (field: keyof Player, value: string | number | null) => {
+    hasChangedFormData.current = true;
     setFormData((prev) => ({
       ...prev,
       [field]: value,
     }));
+  };
+
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    hasChangedFile.current = true;
+    if (e.target.files) {
+      const file = e.target.files[0];
+      setFile(file);
+      const url = URL.createObjectURL(file);
+      setPreviewUrl(url);
+    }
   };
 
   const handleDelete = async () => {
@@ -86,9 +155,19 @@ const PlayerSSRow = ({ player }: { player: Player }) => {
       </td>
       <td>
         <label htmlFor="image" className="cursor-pointer">
-          <Image src={UploadAreaImage} alt="Upload area image" width={180} />
+          {previewUrl ? (
+            <img src={previewUrl} alt="image" />
+          ) : (
+            <Image src={UploadAreaImage} alt="Upload area image" width={180} />
+          )}
         </label>
-        <input type="file" id="image" accept="image/*" className="hidden" />
+        <input
+          type="file"
+          id="image"
+          accept="image/*"
+          className="hidden"
+          onChange={(e) => handleFileChange(e)}
+        />
       </td>
       <td className="border">
         <input

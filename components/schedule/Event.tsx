@@ -3,23 +3,23 @@ import { FaCalendar, FaClock, FaLocationDot } from "react-icons/fa6";
 import Logo from "@/public/free-state-logo.png";
 import Image from "next/image";
 
-const Event = ({ event }: { event: EventType }) => {
+export const splitDatetime = (t: string | Date) => {
+  const newDate = new Date(t);
+  const time = new Intl.DateTimeFormat("en-US", {
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+  }).format(newDate);
+  const date = new Intl.DateTimeFormat("en-US", {
+    weekday: "long",
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  }).format(newDate);
+  return { time, date };
+};
 
-  const splitDatetime = (t: string) => {
-    const newate = new Date(t);
-    const time = new Intl.DateTimeFormat("en-US", {
-      hour: "numeric",
-      minute: "2-digit",
-      hour12: true,
-    }).format();
-    const date = new Intl.DateTimeFormat("en-US", {
-      weekday: "long",
-      month: "long",
-      day: "numeric",
-      year: "numeric",
-    }).format();
-    return { time, date };
-  }
+const Event = ({ event }: { event: EventType }) => {
 
   const time = event.datetime ? splitDatetime(event.datetime).time : "Not defined";
   const date = event.datetime ? splitDatetime(event.datetime).date : "Not defined";

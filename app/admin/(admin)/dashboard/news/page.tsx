@@ -1,15 +1,15 @@
 import NewsMain from "@/components/Admin/news/news-main";
 import { connectDB } from "@/db/db";
-import adminNewsModel from "@/db/schemas/adminNewsModel";
+import newsModel from "@/db/schemas/newsModel";
 
 const NewsPage = async () => {
   await connectDB();
-  const data = await adminNewsModel.find();
-  const news = data.map((item) => item.toObject());
+  const data = await newsModel.find();
+  const news = data.map((item) => JSON.parse(JSON.stringify(item)));
 
   return (
     <div className="overflow-auto pr-5 space-y-4">
-      <NewsMain />
+      <NewsMain news={news} />
     </div>
   );
 };

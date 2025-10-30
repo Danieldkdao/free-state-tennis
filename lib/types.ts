@@ -25,19 +25,25 @@ export type Team =
   | "Girls Varsity"
   | "Girls Junior Varsity";
 
+export type Image = {
+  url: string;
+  publicId: string;
+}
+
 export type News = {
   _id: string;
   title: string;
   content: string;
-  image: string | null;
+  image: Image | null;
   views: number;
   comments: Comment[];
   createdAt: Date;
+  updatedAt: Date;
 };
 
 export type Player = {
   _id: string;
-  image: string | null;
+  image: Image | null;
   name: string;
   bio: string;
   class: classes;
@@ -58,6 +64,6 @@ export type Event = {
   team: Team;
   away: boolean;
   opponent: string;
-  image: string | null;
+  image: Image | null;
   location: string;
 };

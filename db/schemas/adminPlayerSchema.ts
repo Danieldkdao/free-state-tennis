@@ -1,4 +1,5 @@
 import mongoose, { Document, Schema, Model } from "mongoose";
+import { Image, ImageSchema } from "./adminEventModel";
 
 export type classes = "Freshman" | "Sophomore" | "Junior" | "Senior";
 
@@ -17,7 +18,7 @@ export type teams = "Boy" | "Girl";
 
 export interface IAdminPlayer extends Document {
   _id: string;
-  image: string | null;
+  image: Image | null;
   name: string;
   bio: string;
   class: classes;
@@ -33,7 +34,7 @@ export interface IAdminPlayer extends Document {
 }
 
 const AdminPlayerSchema = new Schema<IAdminPlayer>({
-  image: { type: String },
+  image: { type: ImageSchema || null },
   name: { type: String },
   bio: { type: String },
   class: { type: String, required: true },

@@ -1,4 +1,5 @@
 import mongoose, { Document, Schema, Model } from "mongoose";
+import { Image, ImageSchema } from "./adminEventModel";
 
 type Comment = {
   user: string;
@@ -10,10 +11,11 @@ export interface INews extends Document {
   _id: string;
   title: string;
   content: string;
-  image: string | null;
+  image: Image | null;
   views: number;
   comments: Comment[];
   createdAt: Date;
+  updatedAt: Date;
 }
 
 const CommentSchema = new Schema<Comment>(
@@ -29,7 +31,7 @@ const NewsSchema = new Schema<INews>(
     title: { type: String, required: true },
     content: { type: String, required: true },
     views: { type: Number, default: 0 },
-    image: { type: String || null },
+    image: { type: ImageSchema || null },
     comments: { type: [CommentSchema], default: [] },
   },
   { timestamps: true }

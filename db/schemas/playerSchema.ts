@@ -1,4 +1,5 @@
 import mongoose, { Document, Schema, Model } from "mongoose";
+import { Image, ImageSchema } from "./adminEventModel";
 
 export type classes = "Freshman" | "Sophomore" | "Junior" | "Senior";
 
@@ -17,7 +18,7 @@ export type teams = "Boy" | "Girl";
 
 export interface IPlayer extends Document {
   _id: string;
-  image: string | null;
+  image: Image | null;
   name: string;
   bio: string;
   class: classes;
@@ -33,7 +34,7 @@ export interface IPlayer extends Document {
 }
 
 const PlayerSchema = new Schema<IPlayer>({
-  image: { type: String || null },
+  image: { type: ImageSchema || null },
   name: { type: String, required: true },
   bio: { type: String, required: true },
   class: { type: String, required: true },

@@ -1,8 +1,8 @@
 import Image from "next/image";
-
 import Placeholder1 from "@/public/placeholder-1.png";
 import { News } from "@/lib/types";
 import Link from "next/link";
+import { load } from "cheerio";
 
 const showDateCreated = (d: Date | string | number) => {
   const date = new Date(d);
@@ -10,6 +10,8 @@ const showDateCreated = (d: Date | string | number) => {
 };
 
 const NewsCard = ({ news }: { news: News }) => {
+  const content = load(news.content).text();
+
   return (
     <Link href={`/news/${news._id}`}>
       <div className="flex w-full border">
@@ -23,10 +25,9 @@ const NewsCard = ({ news }: { news: News }) => {
         <div className="p-5 flex-1 space-y-4">
           <h1 className="text-2xl font-bold">{news.title}</h1>
           <p>
-            {showDateCreated(news.createdAt)} &middot; {news.lengthOfRead} min
-            read
+            {showDateCreated(news.createdAt)}
           </p>
-          <p className="line-clamp-4 mb-10">{news.content}</p>
+          <p className="line-clamp-4 mb-10">{content}</p>
           <hr />
           <div className="gap-4 flex items-center">
             <p>{news.views} views</p>

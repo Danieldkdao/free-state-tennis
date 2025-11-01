@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Placeholder1 from "@/public/placeholder-1.png";
+import Logo from "@/public/free-state-logo.png";
 import { News } from "@/lib/types";
 import Link from "next/link";
 import { load } from "cheerio";
@@ -16,17 +16,25 @@ const NewsCard = ({ news }: { news: News }) => {
     <Link href={`/news/${news._id}`}>
       <div className="flex w-full border">
         <div className="flex-1">
-          <Image
-            src={Placeholder1}
-            alt="Placeholder image 1"
-            className="object-cover w-full max-h-96"
-          />
+          {news.image ? (
+            <Image
+              src={news.image.url}
+              alt={news.title}
+              width={800}
+              height={400}
+              className="object-cover w-full max-h-96"
+            />
+          ) : (
+            <Image
+              src={Logo}
+              alt="Placeholder image 1"
+              className="object-cover w-full max-h-96"
+            />
+          )}
         </div>
         <div className="p-5 flex-1 space-y-4">
           <h1 className="text-2xl font-bold">{news.title}</h1>
-          <p>
-            {showDateCreated(news.createdAt)}
-          </p>
+          <p>{showDateCreated(news.createdAt)}</p>
           <p className="line-clamp-4 mb-10">{content}</p>
           <hr />
           <div className="gap-4 flex items-center">

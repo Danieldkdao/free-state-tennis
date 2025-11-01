@@ -8,7 +8,21 @@ const PlayerCard = ({ player }: { player: Player }) => {
   return (
     <div className="relative border overflow-hidden">
       <div className="hover:scale-105 transition-transform duration-100 ease-in-out">
-        <Image src={Logo} alt="Free state player image" />
+        {player.image ? (
+          <Image
+            src={player.image.url}
+            alt="Free state player image"
+            className="w-full max-h-64 object-cover"
+            height={180}
+            width={80}
+          />
+        ) : (
+          <Image
+            src={Logo}
+            alt="Free state player image"
+            className="w-full max-h-72"
+          />
+        )}
       </div>
       <div className="p-5 flex flex-col gap-2">
         <div className="">
@@ -20,9 +34,6 @@ const PlayerCard = ({ player }: { player: Player }) => {
         </div>
 
         <p className="line-clamp-2">{player.bio}</p>
-        <p>
-          Record: {player.wins} | {player.losses}
-        </p>
         <Link
           href={`/roster/player/${player._id}`}
           className="flex items-center gap-1 cursor-pointer hover:gap-3 transition-all duration-200 ease-in-out"

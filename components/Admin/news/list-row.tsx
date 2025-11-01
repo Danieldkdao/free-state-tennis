@@ -25,8 +25,8 @@ const ListRow = ({ news, setShowModal }: ListRowPropTypes) => {
     defaultContent: news.content,
     defaultImage: news.image?.url || null,
     defaultTitle: news.title,
-    submitFunc: async (formData: FormData) => {
-      const response = await updateNews(formData, news._id);
+    submitFunc: async (formData: FormData, file: File | null) => {
+      const response = await updateNews(formData, file, news._id);
       if (response.success) {
         toast.success(response.message);
         router.refresh();
@@ -55,7 +55,7 @@ const ListRow = ({ news, setShowModal }: ListRowPropTypes) => {
     <>
       <tr className="border max-w-96">
         <td className="py-2 px-3 border">
-          <Image src={news.image?.url || Logo} alt={news.title} width={100} />
+          <Image src={news.image?.url || Logo} alt={news.title} width={120} height={45}/>
         </td>
         <td className="py-2 px-3 border space-y-2">
           <div className="space-y-1">
@@ -91,6 +91,7 @@ const ListRow = ({ news, setShowModal }: ListRowPropTypes) => {
             </button>
             <button
               onClick={async () => {
+                if(!window.confirm("Are you sure you want to delete this blog? This action cannot be undone.")) return;
                 const response = await deleteNews(news._id);
                 if (response.success) {
                   toast.success(response.message);

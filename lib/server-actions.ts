@@ -5,19 +5,18 @@ import adminEventModel from "@/db/schemas/adminEventModel";
 import playerModel from "@/db/schemas/playerSchema";
 import eventModel from "@/db/schemas/eventModel";
 import newsModel from "@/db/schemas/newsModel";
-import { Event, Image, Player } from "./types";
+import { Event, Image, Player, Results } from "./types";
 import { connectDB } from "@/db/db";
 import { revalidatePath } from "next/cache";
 import cloudinary from "@/db/cloudinary";
+import { FormType } from "@/app/(main)/roster/player-form/page";
 
 export const createNews = async (formData: FormData, file: File | null) => {
   await connectDB();
   const title = formData.get("title") as string;
   const content = formData.get("content") as string;
 
-  const res = await saveImageBuffer(file);
-  const image =
-    res && "url" in res ? { url: res.url, publicId: res.publicId } : null;
+  const image = await saveImageBuffer(file);
 
   const newNews = new newsModel({
     title,
@@ -80,14 +79,20 @@ export const addNewRowServer = async (type: "player" | "event") => {
       name: "",
       bio: "",
       class: "Freshman",
-      wins: null,
-      losses: null,
-      heightFt: null,
-      heightIn: null,
+      singles: {
+        wins: 0,
+        losses: 0,
+      },
+      doubles: {
+        wins: 0,
+        losses: 0,
+      },
+      height: {
+        ft: null,
+        in: null,
+      },
       playingStyle: "Unknown",
-      yearsOnVarsity: 0,
       isVarsity: "TBD",
-      seasonsPlayed: [],
       team: "Boy",
     });
     await newPlayer.save();
@@ -116,9 +121,29 @@ export const updatePlayerData = async (id: string, data: Partial<Player>) => {
   };
 };
 
+export const submitPlayerForm = async (formData: FormType, file: File | null) => {
+  const results: Results = {
+    wins: 0,
+    losses: 0,
+  }
+  const image = await saveImageBuffer(file);
+
+  const newPlayer = {
+    ...formData,
+    image,
+    singles: results,
+    doubles: results,
+    isVarsity: "TBD",
+  }
+
+  
+}
+
 export const deletePlayerRow = async (id: string) => {
   await connectDB();
-  const deletedUser = await adminPlayerModel.findByIdAndDelete(id);
+  const deletedUser = await adminPlayerModel
+    .findByIdAndDelete(id)
+    .select("image");
   if (deletedUser?.image?.publicId) {
     await deleteImage(deletedUser.image.publicId);
   }
@@ -126,6 +151,20 @@ export const deletePlayerRow = async (id: string) => {
   return {
     success: true,
     message: "Player row deleted successfully!",
+  };
+};
+
+export const deleteEventRow = async (id: string) => {
+  const deletedEvent = await adminEventModel
+    .findByIdAndDelete(id)
+    .select("image");
+  if (deletedEvent?.image?.publicId) {
+    await deleteImage(deletedEvent.image.publicId);
+  }
+  revalidatePath("/admin/dashboard/events");
+  return {
+    success: true,
+    message: "Event row deleted successfully!",
   };
 };
 
@@ -203,6 +242,26 @@ export const saveImageEvents = async (id: string, image: Image) => {
   return { success: true, message: "Image saved successfully!" };
 };
 
+export const resetImagePlayers = async (id: string) => {
+  const oldImage = await adminPlayerModel
+    .findByIdAndUpdate(id, { $set: { image: null } })
+    .select("image");
+  if(oldImage?.image?.publicId){
+    await deleteImage(oldImage.image.publicId);
+  }
+  return { success: true, message: "Images reset successfully!" };
+};
+
+export const resetImageEvents = async (id: string) => {
+  const oldImage = await adminEventModel
+    .findByIdAndUpdate(id, { $set: { image: null } })
+    .select("image");
+  if (oldImage?.image?.publicId) {
+    await deleteImage(oldImage.image.publicId);
+  }
+  return { success: true, message: "Images reset successfully!" };
+};
+
 export const deleteImage = async (publicId: string) => {
   const result = await cloudinary.uploader.destroy(publicId);
   if (result.result === "ok") {
@@ -233,7 +292,7 @@ export const getSignature = async () => {
 };
 
 export const saveImageBuffer = async (file: File | null) => {
-  if (!file) return;
+  if (!file) return null;
   try {
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
@@ -250,9 +309,9 @@ export const saveImageBuffer = async (file: File | null) => {
         )
         .end(buffer);
     });
-    return { url: result.secure_url, publicId: result.publicId } as Image;
+    return { url: result.secure_url, publicId: result.public_id } as Image;
   } catch (error) {
     console.error(error);
-    return { error: "Failed to upload image." };
+    return null;
   }
 };

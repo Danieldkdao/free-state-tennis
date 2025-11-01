@@ -6,9 +6,16 @@ import { Event, Team } from "@/lib/types";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { usePlayer } from "@/hooks/usePlayer";
 import useDebouncedValue from "@/hooks/useDebouncedValue";
-import { getSignature, saveImageEvents, updateEventData } from "@/lib/server-actions";
+import {
+  deleteEventRow,
+  getSignature,
+  resetImageEvents,
+  saveImageEvents,
+  updateEventData,
+} from "@/lib/server-actions";
 import { UploadApiResponse } from "cloudinary";
 import toast from "react-hot-toast";
+import { FaTrash, FaXmark } from "react-icons/fa6";
 
 const teamLevels = [
   "Boys Varsity",
@@ -23,7 +30,9 @@ const EventsSSRow = ({ event }: { event: Event }) => {
   const [formData, setFormData] = useState(event);
   const { setIsSaving, setLastSaved } = usePlayer();
   const [file, setFile] = useState<File | null>(null);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(event.image?.url || null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(
+    event.image?.url || null
+  );
 
   const debouncedFormData = useDebouncedValue(formData, 1000);
   const debouncedFile = useDebouncedValue(file, 1000);
@@ -49,7 +58,7 @@ const EventsSSRow = ({ event }: { event: Event }) => {
   }, [debouncedFormData]);
 
   useEffect(() => {
-    if (!hasChangedFile.current) return;
+    if (!hasChangedFile.current || !debouncedFile) return;
     const saveFileToDatabase = async () => {
       setIsSaving(true);
       try {
@@ -103,12 +112,12 @@ const EventsSSRow = ({ event }: { event: Event }) => {
   }, [debouncedFile]);
 
   const handleChange = (field: keyof Event, value: string | boolean) => {
-      hasChangedFormData.current = true;
-      setFormData((prev) => ({
-        ...prev,
-        [field]: value,
-      }));
-    };
+    hasChangedFormData.current = true;
+    setFormData((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     hasChangedFile.current = true;
@@ -120,10 +129,45 @@ const EventsSSRow = ({ event }: { event: Event }) => {
     }
   };
 
+  const handleDelete = async () => {
+    if (
+      !confirm(
+        "Are you sure you want to remove this event from the schedule? This action cannot be undone."
+      )
+    )
+      return;
+    const res = await deleteEventRow(event._id);
+    if (res.success) {
+      toast.success(res.message);
+    } else {
+      toast.error("Something went wrong.");
+    }
+  };
+
+  const handleImageReset = async () => {
+    setIsSaving(true);
+    setFile(null);
+    setPreviewUrl(null);
+    const res = await resetImageEvents(event._id);
+    if (!res.success) {
+      toast.error("An error occurred.");
+    }
+    setIsSaving(false);
+    setLastSaved(new Date());
+  };
+
   return (
     <tr className="border">
       <td className="border">
-        <label htmlFor="image" className="cursor-pointer">
+        <button
+          onClick={handleDelete}
+          className="w-full cursor-pointer flex justify-center py-2"
+        >
+          <FaTrash size={32} />
+        </button>
+      </td>
+      <td className="border relative group">
+        <label htmlFor={`image_${event._id}`} className="cursor-pointer">
           {previewUrl ? (
             <img src={previewUrl} alt="image" />
           ) : (
@@ -132,32 +176,36 @@ const EventsSSRow = ({ event }: { event: Event }) => {
         </label>
         <input
           type="file"
-          id="image"
+          id={`image_${event._id}`}
           accept="image/*"
           className="hidden"
           onChange={(e) => handleFileChange(e)}
         />
+        {previewUrl !== null && (
+          <button
+            onClick={handleImageReset}
+            className="absolute hidden top-1 right-1 group-hover:block rounded-full p-1 bg-white cursor-pointer"
+          >
+            <FaXmark size={20} />
+          </button>
+        )}
       </td>
       <td className="border">
         <input
           type="datetime-local"
-          id="datetime"
+          id={`datetime_${event._id}`}
           className="py-1 px-2 outline-0"
           value={formData.datetime || ""}
-          onChange={(e) =>
-            handleChange("datetime", e.target.value)
-          }
+          onChange={(e) => handleChange("datetime", e.target.value)}
         />
       </td>
       <td className="border pr-2">
         <select
           name="teamLevel"
-          id="team-level"
+          id={`team-level_${event._id}`}
           className="py-1 px-2 outline-0"
           value={formData.team}
-          onChange={(e) =>
-            handleChange("team", e.target.value)
-          }
+          onChange={(e) => handleChange("team", e.target.value)}
         >
           {teamLevels.map((item, i) => {
             return (
@@ -171,12 +219,10 @@ const EventsSSRow = ({ event }: { event: Event }) => {
       <td className="border pr-2">
         <select
           name="away"
-          id="away-team"
+          id={`away-team_${event._id}`}
           className="py-1 px-2 outline-0"
           value={formData.away ? "Yes" : "No"}
-          onChange={(e) =>
-            handleChange("away", e.target.value === "Yes")
-          }
+          onChange={(e) => handleChange("away", e.target.value === "Yes")}
         >
           {away.map((item, i) => {
             return (
@@ -190,23 +236,19 @@ const EventsSSRow = ({ event }: { event: Event }) => {
       <td className="border">
         <input
           type="text"
-          id="opponent"
+          id={`opponent_${event._id}`}
           className="py-1 px-2 outline-0"
           value={formData.opponent}
-          onChange={(e) =>
-            handleChange("opponent", e.target.value)
-          }
+          onChange={(e) => handleChange("opponent", e.target.value)}
         />
       </td>
       <td className="border">
         <input
           type="text"
-          id="location"
+          id={`location_${event._id}`}
           className="py-1 px-2 outline-0"
           value={formData.location}
-          onChange={(e) =>
-            handleChange("location", e.target.value)
-          }
+          onChange={(e) => handleChange("location", e.target.value)}
         />
       </td>
     </tr>

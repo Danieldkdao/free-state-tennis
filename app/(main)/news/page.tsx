@@ -2,12 +2,18 @@ import NewsCard from '@/components/news/NewsCard';
 import { connectDB } from '@/db/db';
 import newsModel from '@/db/schemas/newsModel';
 import { News } from '@/lib/types';
+import Image from 'next/image';
+import NoNewsCurrently from '@/public/no-news-currently.png';
 
 const NewsPage = async () => {
   await connectDB();
   const data = await newsModel.find();
   if(!data.length) {
-    return <h1>No news found</h1>
+    return (
+          <div className="w-full flex justify-center">
+            <Image src={NoNewsCurrently} alt="No news currently image" />
+          </div>
+        );
   }
   const news: News[] = data.map(item => JSON.parse(JSON.stringify(item)));
 

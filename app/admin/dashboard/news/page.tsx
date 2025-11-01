@@ -1,4 +1,4 @@
-import NewsMain from "@/components/Admin/news/news-main";
+import NewsMain from "@/components/admin/news/news-main";
 import { connectDB } from "@/db/db";
 import newsModel from "@/db/schemas/newsModel";
 

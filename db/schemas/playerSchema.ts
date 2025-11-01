@@ -1,20 +1,15 @@
 import mongoose, { Document, Schema, Model } from "mongoose";
 import { Image, ImageSchema } from "./adminEventModel";
-
-export type classes = "Freshman" | "Sophomore" | "Junior" | "Senior";
-
-export type playingStyles =
-  | "Unknown"
-  | "Aggressive Baseliner"
-  | "Counter-Puncher"
-  | "Serve and Volley"
-  | "All-Court Player";
-
-export type yearsOnVarsity = 1 | 2 | 3 | 4;
-
-export type isVarsity = "TBD" | "Varsity" | "Junior Varsity";
-
-export type teams = "Boy" | "Girl";
+import {
+  classes,
+  Height,
+  HeightSchema,
+  levels,
+  playingStyles,
+  Results,
+  ResultsSchema,
+  teams,
+} from "./adminPlayerSchema";
 
 export interface IPlayer extends Document {
   _id: string;
@@ -22,33 +17,28 @@ export interface IPlayer extends Document {
   name: string;
   bio: string;
   class: classes;
-  wins: number | null;
-  losses: number | null;
-  heightFt: number | null;
-  heightIn: number | null;
+  singles: Results;
+  doubles: Results;
+  height: Height;
   playingStyle: playingStyles;
-  yearsOnVarsity: yearsOnVarsity;
-  isVarsity: isVarsity;
-  seasonsPlayed: string[];
+  isVarsity: levels;
   team: teams;
 }
 
 const PlayerSchema = new Schema<IPlayer>({
   image: { type: ImageSchema || null },
-  name: { type: String, required: true },
+  name: { type: String, required: true, unique: true },
   bio: { type: String, required: true },
   class: { type: String, required: true },
-  wins: { type: Number || null },
-  losses: { type: Number || null },
-  heightFt: { type: Number || null },
-  heightIn: { type: Number || null },
+  singles: { type: ResultsSchema, required: true },
+  doubles: { type: ResultsSchema, required: true },
+  height: { type: HeightSchema, required: true },
   playingStyle: { type: String, required: true },
-  yearsOnVarsity: { type: Number, required: true },
   isVarsity: { type: String, required: true },
-  seasonsPlayed: { type: [String], required: true },
   team: { type: String, required: true },
 });
 
-const playerModel: Model<IPlayer> = mongoose.models.Player || mongoose.model("Player", PlayerSchema);
+const playerModel: Model<IPlayer> =
+  mongoose.models.Player || mongoose.model("Player", PlayerSchema);
 
 export default playerModel;

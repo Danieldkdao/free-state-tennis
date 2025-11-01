@@ -1,5 +1,5 @@
-import EventsSSRow from "@/components/Admin/events/ss-row";
-import Operations from "@/components/Admin/operations";
+import EventsSSRow from "@/components/admin/events/ss-row";
+import Operations from "@/components/admin/operations";
 import { connectDB } from "@/db/db";
 import adminEventModel from "@/db/schemas/adminEventModel";
 
@@ -14,6 +14,7 @@ const EventsPage = async () => {
       <table>
         <thead>
           <tr className="border">
+            <th className="border py-2 px-3">Delete</th>
             <th className="border py-2 px-3">Image</th>
             <th className="border py-2 px-3">Date</th>
             <th className="border py-2 px-3">Team</th>
@@ -23,7 +24,7 @@ const EventsPage = async () => {
           </tr>
         </thead>
         <tbody>
-          {events.map((event) => {
+          {events.reverse().map((event) => {
             return <EventsSSRow key={event._id} event={event} />;
           })}
         </tbody>

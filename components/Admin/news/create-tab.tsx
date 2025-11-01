@@ -6,9 +6,9 @@ import Editor from "@/components/editor";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import toast from "react-hot-toast";
 import { ChangeEvent, useState } from "react";
 import LoadingSpinner from "@/components/loading-spinner";
+import { FaXmark } from "react-icons/fa6";
 
 const newsSchema = z.object({
   title: z.string().min(1, "Title is required"),
@@ -19,7 +19,11 @@ type NewsForm = z.infer<typeof newsSchema>;
 
 type CreateTabPropTypes = {
   buttonText: string;
-  submitFunc: (formData: FormData, file: File | null, ...any: any) => Promise<any>;
+  submitFunc: (
+    formData: FormData,
+    file: File | null,
+    ...any: any
+  ) => Promise<any>;
   defaultContent: string;
   defaultTitle: string;
   defaultImage: string | null;
@@ -52,12 +56,12 @@ const CreateTab = ({
   );
 
   const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
-    if(e.target.files){
+    if (e.target.files) {
       setFile(e.target.files[0]);
       const url = URL.createObjectURL(e.target.files[0]);
       setPreviewUrl(url);
     }
-  }
+  };
 
   const onSubmit = async (data: NewsForm) => {
     setIsLoading(true);
@@ -68,12 +72,17 @@ const CreateTab = ({
     setIsLoading(false);
   };
 
+  const handleImageReset = () => {
+    setFile(null);
+    setPreviewUrl(null);
+  };
+
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
       className="flex flex-col gap-4 items-start"
     >
-      <div className="space-y-2">
+      <div className="space-y-2 group relative">
         <p>Image</p>
         <label htmlFor="image" className="cursor-pointer">
           {previewUrl ? (
@@ -89,6 +98,14 @@ const CreateTab = ({
           className="hidden"
           onChange={(e) => handleFileChange(e)}
         />
+        {previewUrl !== null && (
+          <button
+            onClick={handleImageReset}
+            className="absolute hidden top-1 right-1 group-hover:block rounded-full p-1 bg-white cursor-pointer"
+          >
+            <FaXmark size={20} />
+          </button>
+        )}
       </div>
       <div className="flex flex-col gap-2 w-full">
         <label htmlFor="title">Title</label>

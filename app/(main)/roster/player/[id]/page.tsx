@@ -23,13 +23,23 @@ const PlayerPage = async ({ params }: { params: Promise<{ id: string }> }) => {
     <div className="w-full mt-8 mb-24">
       <div className="w-full flex gap-4">
         <div className="flex-2 border p-5 flex gap-4">
-          <Image
-            src={player.image || Logo}
-            alt={player.name}
-            width={200}
-            height={200}
-            className="object-cover"
-          />
+          {player.image ? (
+            <Image
+              src={player.image.url}
+              alt={player.name}
+              width={200}
+              height={200}
+              className="object-cover"
+            />
+          ) : (
+            <Image
+              src={Logo}
+              alt={player.name}
+              width={200}
+              height={200}
+              className="object-cover"
+            />
+          )}
           <div className="flex flex-col gap-4 w-full">
             <div className="w-full">
               <div className="w-full flex items-center justify-between">
@@ -39,13 +49,21 @@ const PlayerPage = async ({ params }: { params: Promise<{ id: string }> }) => {
               <p>{player.class}</p>
             </div>
             <hr />
-            <div className="w-full grid grid-cols-3 gap-4">
+            <div className="w-full grid grid-cols-2">
               <div>
-                <h1 className="text-xl">Record</h1>
+                <h1 className="text-xl">Singles Record</h1>
                 <p>
-                  {player.wins} - {player.losses}
+                  {player.singles.wins} - {player.singles.losses}
                 </p>
               </div>
+              <div>
+                <h1 className="text-xl">Doubles Record</h1>
+                <p>
+                  {player.doubles.wins} - {player.doubles.losses}
+                </p>
+              </div>
+            </div>
+            <div className="w-full grid grid-cols-2">
               <div>
                 <h1 className="text-xl">Playing Style</h1>
                 <p>{player.playingStyle}</p>
@@ -53,23 +71,15 @@ const PlayerPage = async ({ params }: { params: Promise<{ id: string }> }) => {
               <div>
                 <h1 className="text-xl">Height</h1>
                 <p>
-                  {player.heightFt || player.heightIn ? `${player.heightFt}' ${player.heightIn}` : "Unknown"}
+                  {!player.height.ft || !player.height.in
+                    ? "Unknown"
+                    : `${player.height.ft}' ${player.height.in}`}
                 </p>
-              </div>
-            </div>
-            <div className="w-full grid grid-cols-3">
-              <div>
-                <h1 className="text-xl">Years on Varsity</h1>
-                <p>{player.yearsOnVarsity}</p>
-              </div>
-              <div>
-                <h1 className="text-xl">Seasons Played</h1>
-                <p>{player.seasonsPlayed.join(", ")}</p>
               </div>
             </div>
           </div>
         </div>
-        <div className="border flex-1 p-5 flex flex-col gap-4">
+        <div className="border flex-1 p-5 flex flex-col gap-4 max-h-80 overflow-y-auto">
           <h1 className="text-xl">Bio</h1>
           <p>{player.bio}</p>
         </div>

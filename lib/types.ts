@@ -13,9 +13,7 @@ export type playingStyles =
   | "Serve and Volley"
   | "All-Court Player";
 
-export type yearsOnVarsity = 1 | 2 | 3 | 4;
-
-export type isVarsity = "TBD" | "Varsity" | "Junior Varsity";
+export type levels = "TBD" | "Varsity" | "Junior Varsity";
 
 export type teams = "Boy" | "Girl";
 
@@ -28,7 +26,17 @@ export type Team =
 export type Image = {
   url: string;
   publicId: string;
-}
+};
+
+export type Results = {
+  wins: number;
+  losses: number;
+};
+
+export type Height = {
+  ft: number | null;
+  in: number | null;
+};
 
 export type News = {
   _id: string;
@@ -47,14 +55,11 @@ export type Player = {
   name: string;
   bio: string;
   class: classes;
-  wins: number | null;
-  losses: number | null;
-  heightFt: number | null;
-  heightIn: number | null;
+  singles: Results;
+  doubles: Results;
+  height: Height;
   playingStyle: playingStyles;
-  yearsOnVarsity: yearsOnVarsity;
-  isVarsity: isVarsity;
-  seasonsPlayed: string[];
+  isVarsity: levels;
   team: teams;
 };
 

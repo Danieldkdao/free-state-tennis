@@ -20,9 +20,12 @@ export const splitDatetime = (t: string | Date) => {
 };
 
 const Event = ({ event }: { event: EventType }) => {
-
-  const time = event.datetime ? splitDatetime(event.datetime).time : "Not defined";
-  const date = event.datetime ? splitDatetime(event.datetime).date : "Not defined";
+  const time = event.datetime
+    ? splitDatetime(event.datetime).time
+    : "Not defined";
+  const date = event.datetime
+    ? splitDatetime(event.datetime).date
+    : "Not defined";
 
   return (
     <div className="w-full border p-5 space-y-4">
@@ -41,12 +44,22 @@ const Event = ({ event }: { event: EventType }) => {
       </div>
       <hr />
       <div className="flex gap-4">
-        <Image
-          src={Logo}
-          alt="Free state logo image"
-          width={100}
-          height={100}
-        />
+        {event.image ? (
+          <Image
+            src={event.image.url}
+            alt="Event image"
+            width={100}
+            height={100}
+            className="object-cover"
+          />
+        ) : (
+          <Image
+            src={Logo}
+            alt="Free state logo image"
+            width={100}
+            height={100}
+          />
+        )}
         <div className="flex flex-col">
           <div className="flex-1">
             <h1 className="text-xl">{event.team}</h1>

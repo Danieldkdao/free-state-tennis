@@ -2,8 +2,7 @@ import { connectDB } from "@/db/db";
 import newsModel from "@/db/schemas/newsModel";
 import { FaCircleXmark, FaPaperPlane } from "react-icons/fa6";
 import Image from "next/image";
-import Placeholder1 from "@/public/placeholder-1.png";
-import { load } from 'cheerio';
+import Logo from "@/public/free-state-logo.png";
 
 const NewsContentPage = async ({
   params,
@@ -30,26 +29,27 @@ const NewsContentPage = async ({
       <div className="w-[65%] p-10 border space-y-4">
         <div className="space-y-2">
           <h1 className="text-4xl font-bold">{newsContent.title}</h1>
-          <p>
-            {new Date(newsContent.createdAt).toLocaleDateString()}
-          </p>
+          <p>{new Date(newsContent.createdAt).toLocaleDateString()}</p>
+          {newsContent.image ? (
+            <Image
+              src={newsContent.image.url}
+              alt={newsContent.title}
+              width={800}
+              height={400}
+              className="object-cover w-full max-h-96"
+            />
+          ) : (
+            <Image
+              src={Logo}
+              alt="Placeholder image 1"
+              className="object-cover w-full max-h-96"
+            />
+          )}
         </div>
-        <div dangerouslySetInnerHTML={{ __html: newsContent.content }} className="format-text"></div>
-        {newsContent.image ? (
-          <Image
-            src={newsContent.image}
-            alt={newsContent.title}
-            width={800}
-            height={400}
-            className="object-cover w-full max-h-96"
-          />
-        ) : (
-          <Image
-            src={Placeholder1}
-            alt="Placeholder image 1"
-            className="object-cover w-full max-h-96"
-          />
-        )}
+        <div
+          dangerouslySetInnerHTML={{ __html: newsContent.content }}
+          className="format-text"
+        ></div>
         <hr />
         <div>
           <p>

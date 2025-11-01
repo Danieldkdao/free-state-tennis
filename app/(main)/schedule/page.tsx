@@ -1,14 +1,20 @@
 import Event from "@/components/schedule/Event";
 import { connectDB } from "@/db/db";
 import eventModel from "@/db/schemas/eventModel";
+import Image from "next/image";
+import NoEventsScheduled from "@/public/no-events-scheduled.png";
 
 const SchedulePage = async () => {
   await connectDB();
   const data = await eventModel.find();
   if (!data.length) {
-    return <h1>No events found</h1>;
+    return (
+      <div className="w-full flex justify-center">
+        <Image src={NoEventsScheduled} alt="No events scheduled image" />
+      </div>
+    );
   }
-  const events = data.map((item) => item.toObject());
+  const events = data.map((item) => JSON.parse(JSON.stringify(item)));
 
   return (
     <div className="w-full mt-8 flex flex-col gap-4">

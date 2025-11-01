@@ -1,60 +1,72 @@
 "use client";
 
+import { usePlayer } from "@/hooks/usePlayer";
+import { classes, levels, teams } from "@/lib/types";
 import { useState } from "react";
 import { FaChevronRight, FaMagnifyingGlass } from "react-icons/fa6";
 
 const PlayerFilters = () => {
   const [dropdowns, setDropdowns] = useState({
-    year: false,
-    gender: false,
-    position: false,
+    class: false,
+    team: false,
+    level: false,
   });
+  const { changeFilters, searchQuery, setSearchQuery } = usePlayer();
 
-  const yearDropdown = ["Freshman", "Sophomore", "Junior", "Senior"];
+  const classDropdown: classes[] = [
+    "Freshman",
+    "Sophomore",
+    "Junior",
+    "Senior",
+  ];
 
-  const genderDropdown = ["Boy", "Girl"];
+  const teamDropdown: teams[] = ["Boy", "Girl"];
 
-  const positionDropdown = ["Varsity", "Junior Varsity"];
+  const levelDropdown: levels[] = ["TBD", "Varsity", "Junior Varsity"];
   return (
     <div>
       <div className="w-full flex items-center justify-between gap-16">
-        <div className="flex-1 max-w-[500px] flex items-center ">
+        <div className="flex-1 flex items-center ">
           <FaMagnifyingGlass />
           <input
             type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search for a player..."
-            className="p-2 rounded outline-0 flex-1"
+            className="p-2 outline-0 flex-1"
           />
         </div>
         <div className="flex items-center gap-4">
-          <select className="outline-0">
-            <option value="2025-2026">2025-2026</option>
-          </select>
           <div className="relative">
             <button
               onClick={() =>
-                setDropdowns((prev) => ({ ...prev, year: !prev.year }))
+                setDropdowns((prev) => ({ ...prev, class: !prev.class }))
               }
               className="flex items-center gap-2 cursor-pointer"
             >
-              <p>Year</p>
+              <p>Class</p>
               <FaChevronRight
                 className={`transition-transform duration-200 ease-in-out ${
-                  dropdowns.year ? "rotate-90" : ""
+                  dropdowns.class ? "rotate-90" : ""
                 }`}
               />
             </button>
             <div
               className={`absolute z-[1000] free-green-bg right-0 top-[125%] p-2 rounded transition-opacity duration-200 ease-in-out ${
-                dropdowns.year
+                dropdowns.class
                   ? "opacity-100 pointer-events-auto"
                   : "opacity-0 pointer-events-none"
               }`}
             >
-              {yearDropdown.map((item, index) => {
+              {classDropdown.map((item, index) => {
                 return (
                   <div key={index} className="flex items-center gap-1">
-                    <input type="checkbox" id={item} className="accent-black" />
+                    <input
+                      onChange={() => changeFilters<classes>("class", item)}
+                      type="checkbox"
+                      id={item}
+                      className="accent-black"
+                    />
                     <label className="text-white" htmlFor={item}>
                       {item}
                     </label>
@@ -66,28 +78,33 @@ const PlayerFilters = () => {
           <div className="relative">
             <button
               onClick={() =>
-                setDropdowns((prev) => ({ ...prev, gender: !prev.gender }))
+                setDropdowns((prev) => ({ ...prev, team: !prev.team }))
               }
               className="flex items-center gap-2 cursor-pointer"
             >
-              <p>Gender</p>
+              <p>Team</p>
               <FaChevronRight
                 className={`transition-transform duration-200 ease-in-out ${
-                  dropdowns.gender ? "rotate-90" : ""
+                  dropdowns.team ? "rotate-90" : ""
                 }`}
               />
             </button>
             <div
               className={`absolute z-[1000] free-green-bg right-0 top-[125%] p-2 rounded transition-opacity duration-200 ease-in-out ${
-                dropdowns.gender
+                dropdowns.team
                   ? "opacity-100 pointer-events-auto"
                   : "opacity-0 pointer-events-none"
               }`}
             >
-              {genderDropdown.map((item, index) => {
+              {teamDropdown.map((item, index) => {
                 return (
                   <div key={index} className="flex items-center gap-1">
-                    <input type="checkbox" id={item} className="accent-black" />
+                    <input
+                      onChange={() => changeFilters<teams>("team", item)}
+                      type="checkbox"
+                      id={item}
+                      className="accent-black"
+                    />
                     <label className="text-white" htmlFor={item}>
                       {item}
                     </label>
@@ -101,30 +118,38 @@ const PlayerFilters = () => {
               onClick={() =>
                 setDropdowns((prev) => ({
                   ...prev,
-                  position: !prev.position,
+                  level: !prev.level,
                 }))
               }
               className="flex items-center gap-2 cursor-pointer"
             >
-              <p>Position</p>
+              <p>Level</p>
               <FaChevronRight
                 className={`transition-transform duration-200 ease-in-out ${
-                  dropdowns.position ? "rotate-90" : ""
+                  dropdowns.level ? "rotate-90" : ""
                 }`}
               />
             </button>
             <div
               className={`absolute z-[1000] free-green-bg right-0 top-[125%] p-2 rounded transition-opacity duration-200 ease-in-out ${
-                dropdowns.position
+                dropdowns.level
                   ? "opacity-100 pointer-events-auto"
                   : "opacity-0 pointer-events-none"
               }`}
             >
-              {positionDropdown.map((item, index) => {
+              {levelDropdown.map((item, index) => {
                 return (
                   <div key={index} className="flex items-center gap-1">
-                    <input type="checkbox" id={item} className="accent-black" />
-                    <label className="text-white" htmlFor={item}>
+                    <input
+                      onChange={() => changeFilters<levels>("level", item)}
+                      type="checkbox"
+                      id={item}
+                      className="accent-black"
+                    />
+                    <label
+                      className="text-white whitespace-nowrap"
+                      htmlFor={item}
+                    >
                       {item}
                     </label>
                   </div>

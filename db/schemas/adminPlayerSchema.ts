@@ -10,11 +10,19 @@ export type playingStyles =
   | "Serve and Volley"
   | "All-Court Player";
 
-export type yearsOnVarsity = 0 | 1 | 2 | 3 | 4;
-
-export type isVarsity = "TBD" | "Varsity" | "Junior Varsity";
+export type levels = "TBD" | "Varsity" | "Junior Varsity";
 
 export type teams = "Boy" | "Girl";
+
+export type Results = {
+  wins: number;
+  losses: number;
+};
+
+export type Height = {
+  ft: number | null;
+  in: number | null;
+};
 
 export interface IAdminPlayer extends Document {
   _id: string;
@@ -22,33 +30,45 @@ export interface IAdminPlayer extends Document {
   name: string;
   bio: string;
   class: classes;
-  wins: number | null;
-  losses: number | null;
-  heightFt: number | null;
-  heightIn: number | null;
+  singles: Results;
+  doubles: Results;
+  height: Height;
   playingStyle: playingStyles;
-  yearsOnVarsity: yearsOnVarsity;
-  isVarsity: isVarsity;
-  seasonsPlayed: string[];
+  isVarsity: levels;
   team: teams;
 }
 
+export const ResultsSchema = new Schema<Results>(
+  {
+    wins: { type: Number, required: true },
+    losses: { type: Number, required: true },
+  },
+  { _id: false }
+);
+
+export const HeightSchema = new Schema<Height>(
+  {
+    ft: { type: Number || null },
+    in: { type: Number || null },
+  },
+  { _id: false }
+);
+
 const AdminPlayerSchema = new Schema<IAdminPlayer>({
   image: { type: ImageSchema || null },
-  name: { type: String },
+  name: { type: String, unique: true },
   bio: { type: String },
   class: { type: String, required: true },
-  wins: { type: Number || null },
-  losses: { type: Number || null },
-  heightFt: { type: Number || null },
-  heightIn: { type: Number || null },
+  singles: { type: ResultsSchema, required: true },
+  doubles: { type: ResultsSchema, required: true },
+  height: { type: HeightSchema, required: true },
   playingStyle: { type: String, required: true },
-  yearsOnVarsity: { type: Number, required: true },
   isVarsity: { type: String, required: true },
-  seasonsPlayed: { type: [String] },
   team: { type: String, required: true },
 });
 
-const adminPlayerModel: Model<IAdminPlayer> = mongoose.models.AdminPlayer || mongoose.model("AdminPlayer", AdminPlayerSchema);
+const adminPlayerModel: Model<IAdminPlayer> =
+  mongoose.models.AdminPlayer ||
+  mongoose.model("AdminPlayer", AdminPlayerSchema);
 
 export default adminPlayerModel;

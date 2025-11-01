@@ -21,15 +21,15 @@ const PlayerPage = async ({ params }: { params: Promise<{ id: string }> }) => {
     );
   return (
     <div className="w-full mt-8 mb-24">
-      <div className="w-full flex gap-4">
-        <div className="flex-2 border p-5 flex gap-4">
+      <div className="w-full flex md:flex-row flex-col gap-4">
+        <div className="flex-2 border p-5 flex gap-4 md:flex-row md:items-stretch flex-col items-center">
           {player.image ? (
             <Image
               src={player.image.url}
               alt={player.name}
               width={200}
               height={200}
-              className="object-cover"
+              className="object-cover md:max-h-60 md:w-auto max-h-80 w-full"
             />
           ) : (
             <Image
@@ -40,10 +40,14 @@ const PlayerPage = async ({ params }: { params: Promise<{ id: string }> }) => {
               className="object-cover"
             />
           )}
-          <div className="flex flex-col gap-4 w-full">
+          <div className="flex flex-col gap-4 w-full flex-1">
             <div className="w-full">
-              <div className="w-full flex items-center justify-between">
-                <h1 className="text-2xl font-bold">{player.name}</h1>
+              <div className="w-full flex items-center gap-8 md:gap-4">
+                <input
+                  className="text-2xl font-bold text-oswald w-full flex-1 outline-0"
+                  value={player.name}
+                  readOnly
+                />
                 <p className="font-bold">{player.isVarsity}</p>
               </div>
               <p>{player.class}</p>

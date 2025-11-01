@@ -1,19 +1,13 @@
 "use client";
 
 import Image from "next/image";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import Logo from "@/public/free-state-logo.png";
 import Link from "next/link";
 import { FaBars, FaArrowLeft } from "react-icons/fa6";
 import { authClient } from "@/lib/auth/auth-client";
 import GoogleAuthButton from "./auth/google-auth-button";
-import {
-  FaCircleUser,
-  FaRegClipboard,
-  FaRegUser,
-  FaRightToBracket,
-} from "react-icons/fa6";
-import { useClickOutside } from "@/hooks/useClickOutside";
+import UserProfile from "./auth/user-profile";
 
 const Navbar = () => {
   const navbarLinks = [
@@ -36,18 +30,13 @@ const Navbar = () => {
   ];
 
   const [toggleMenu, setToggleMenu] = useState(false);
-  const [showUserModal, setShowUserModal] = useState(false);
   const { data: session } = authClient.useSession();
-
-  const userModalRef = useRef<HTMLDivElement>(null);
-
-  useClickOutside(userModalRef, () => setShowUserModal(false));
 
   const notSignedIn = session == null;
 
   return (
     <div className="w-full flex p-5 items-center justify-between top-0 sticky bg-white z-[10000]">
-      <div className="flex items-center gap-8">
+      <div className="flex items-center gap-6 md:gap-8">
         <Link href="https://www.freestateathletics.com/" target="_blank">
           <Image
             src={Logo}
@@ -71,51 +60,7 @@ const Navbar = () => {
         {notSignedIn ? (
           <GoogleAuthButton />
         ) : (
-          <div className="relative grid place-items-center" ref={userModalRef}>
-            <button
-              onClick={() => setShowUserModal(!showUserModal)}
-              className="cursor-pointer"
-            >
-              {session?.user.image ? (
-                <Image
-                  src={session.user.image}
-                  alt="User profile image"
-                  width={40}
-                  height={40}
-                  className="rounded-full"
-                />
-              ) : (
-                <FaCircleUser size={40} />
-              )}
-            </button>
-            <div
-              className={`absolute top-[120%] right-0 bg-gray-200 rounded p-2 flex flex-col transition-opacity duration-300 opacity-0 ${
-                showUserModal && "opacity-100"
-              }`}
-            >
-              <Link
-                href="/roster/player-form"
-                className="hover:bg-gray-300 py-1 px-2 rounded whitespace-nowrap flex items-center gap-2"
-              >
-                <FaRegClipboard />
-                Player Form
-              </Link>
-              <Link
-                href="/"
-                className="hover:bg-gray-300 py-1 px-2 rounded flex items-center gap-2"
-              >
-                <FaRegUser />
-                Settings
-              </Link>
-              <button
-                className="hover:bg-gray-300 py-1 px-2 rounded flex items-center gap-2 cursor-pointer"
-                onClick={() => authClient.signOut()}
-              >
-                <FaRightToBracket />
-                Logout
-              </button>
-            </div>
-          </div>
+          <UserProfile />
         )}
         <button onClick={() => setToggleMenu(true)} className="cursor-pointer sm:hidden">
           <FaBars size={40} />

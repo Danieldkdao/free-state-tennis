@@ -27,7 +27,7 @@ export interface IPlayer extends Document {
 
 const PlayerSchema = new Schema<IPlayer>({
   image: { type: ImageSchema || null },
-  name: { type: String, required: true, unique: true },
+  name: { type: String, required: true },
   bio: { type: String, required: true },
   class: { type: String, required: true },
   singles: { type: ResultsSchema, required: true },

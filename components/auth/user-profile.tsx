@@ -1,0 +1,72 @@
+"use client";
+
+import { useClickOutside } from "@/hooks/useClickOutside";
+import { authClient } from "@/lib/auth/auth-client";
+import Image from "next/image";
+import Link from "next/link";
+import { useRef, useState } from "react";
+import {
+  FaCircleUser,
+  FaRegClipboard,
+  FaRegUser,
+  FaRightToBracket,
+} from "react-icons/fa6";
+
+const UserProfile = () => {
+  const [showUserModal, setShowUserModal] = useState(false);
+  const { data: session } = authClient.useSession();
+
+  const userModalRef = useRef<HTMLDivElement>(null);
+
+  useClickOutside(userModalRef, () => setShowUserModal(false));
+
+  return (
+    <div className="relative grid place-items-center" ref={userModalRef}>
+      <button
+        onClick={() => setShowUserModal(!showUserModal)}
+        className="cursor-pointer"
+      >
+        {session?.user.image ? (
+          <Image
+            src={session.user.image}
+            alt="User profile image"
+            width={40}
+            height={40}
+            className="rounded-full"
+          />
+        ) : (
+          <FaCircleUser size={40} />
+        )}
+      </button>
+      <div
+        className={`absolute top-[120%] right-0 bg-gray-200 rounded p-2 flex flex-col transition-opacity duration-300 opacity-0 ${
+          showUserModal && "opacity-100"
+        }`}
+      >
+        <Link
+          href="/roster/player-form"
+          className="hover:bg-gray-300 py-1 px-2 rounded whitespace-nowrap flex items-center gap-2"
+        >
+          <FaRegClipboard />
+          Player Form
+        </Link>
+        <Link
+          href="/"
+          className="hover:bg-gray-300 py-1 px-2 rounded flex items-center gap-2"
+        >
+          <FaRegUser />
+          Settings
+        </Link>
+        <button
+          className="hover:bg-gray-300 py-1 px-2 rounded flex items-center gap-2 cursor-pointer"
+          onClick={() => authClient.signOut()}
+        >
+          <FaRightToBracket />
+          Logout
+        </button>
+      </div>
+    </div>
+  );
+};
+
+export default UserProfile;

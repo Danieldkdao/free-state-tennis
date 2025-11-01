@@ -1,6 +1,5 @@
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
-
 import Placeholder1 from "@/public/placeholder-1.png";
 import Placeholder2 from "@/public/placeholder-2.png";
 import FreeStateLogo from "@/public/free-state-logo.png";
@@ -153,10 +152,12 @@ const Home = () => {
                       <h1 className="text-2xl text-center text-white">
                         {item.title}
                       </h1>
-                      <div className="flex items-center justify-center gap-2 text-white">
-                        <p>{item.date}</p>
+                      <div className="flex items-center justify-center text-white text-center w-full gap-2">
+                        <p className="flex-1">{item.date}</p>
                         <p>|</p>
-                        <p className="line-clamp-1 max-w-48">{item.location}</p>
+                        <p className="line-clamp-1 max-w-48 flex-1 text-center">
+                          {item.location}
+                        </p>
                       </div>
                       <div className="flex items-center justify-center gap-2 my-2">
                         <Image

@@ -14,7 +14,7 @@ const NewsCard = ({ news }: { news: News }) => {
 
   return (
     <Link href={`/news/${news._id}`}>
-      <div className="flex w-full border">
+      <div className="flex flex-col md:flex-row w-full border">
         <div className="flex-1">
           {news.image ? (
             <Image
@@ -22,13 +22,13 @@ const NewsCard = ({ news }: { news: News }) => {
               alt={news.title}
               width={800}
               height={400}
-              className="object-cover w-full max-h-96"
+              className="object-cover w-full max-h-80"
             />
           ) : (
             <Image
               src={Logo}
               alt="Placeholder image 1"
-              className="object-cover w-full max-h-96"
+              className="object-cover w-full max-h-80"
             />
           )}
         </div>

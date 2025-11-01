@@ -7,6 +7,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { ChangeEvent, useState } from "react";
 import { FaXmark } from "react-icons/fa6";
+import { authClient } from "@/lib/auth/auth-client";
+import { redirect } from "next/navigation";
 
 const heightSchema = z.object({
   ft: z.number().nullable(),
@@ -26,6 +28,9 @@ const formSchema = z.object({
 export type FormType = z.infer<typeof formSchema>;
 
 const RosterFormPage = () => {
+  const { data: session } = authClient.useSession();
+  if(!session) return redirect("/");
+  const name = session.user.name || "";
   const [file, setFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
@@ -35,6 +40,9 @@ const RosterFormPage = () => {
     formState: { errors },
   } = useForm<FormType>({
     resolver: zodResolver(formSchema),
+    defaultValues: {
+      name,
+    }
   });
 
   const isFormEnabled = true;

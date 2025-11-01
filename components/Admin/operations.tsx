@@ -2,8 +2,10 @@
 
 import { usePlayer } from "@/hooks/usePlayer";
 import { addNewRowServer, publish } from "@/lib/server-actions";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import { FaSquareArrowUpRight } from "react-icons/fa6";
 
 const Operations = ({ type }: { type: "player" | "event" }) => {
   const router = useRouter();
@@ -43,6 +45,13 @@ const Operations = ({ type }: { type: "player" | "event" }) => {
       >
         Publish
       </button>
+      <Link
+        href={type === "player" ? "/roster" : "schedule"}
+        target="_blank"
+        className="free-green-bg text-white text-center p-2 cursor-pointer"
+      >
+        <FaSquareArrowUpRight size={25}/>
+      </Link>
       <div className="text-sm">
         {isSaving && <span className="text-yellow-600">💾 Saving...</span>}
         {!isSaving && lastSaved && (

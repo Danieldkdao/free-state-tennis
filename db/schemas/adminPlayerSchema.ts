@@ -56,7 +56,7 @@ export const HeightSchema = new Schema<Height>(
 
 const AdminPlayerSchema = new Schema<IAdminPlayer>({
   image: { type: ImageSchema || null },
-  name: { type: String, unique: true },
+  name: { type: String },
   bio: { type: String },
   class: { type: String, required: true },
   singles: { type: ResultsSchema, required: true },

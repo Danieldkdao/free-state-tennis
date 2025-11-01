@@ -28,8 +28,8 @@ const Event = ({ event }: { event: EventType }) => {
     : "Not defined";
 
   return (
-    <div className="w-full border p-5 space-y-4">
-      <div className="w-full flex items-center justify-between">
+    <div className="w-full border p-5 space-y-4 sm:rounded-lg">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between w-full">
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
             <FaCalendar />
@@ -43,7 +43,7 @@ const Event = ({ event }: { event: EventType }) => {
         </div>
       </div>
       <hr />
-      <div className="flex gap-4">
+      <div className="flex flex-col sm:flex-row gap-4">
         {event.image ? (
           <Image
             src={event.image.url}
@@ -62,8 +62,8 @@ const Event = ({ event }: { event: EventType }) => {
         )}
         <div className="flex flex-col">
           <div className="flex-1">
-            <h1 className="text-xl">{event.team}</h1>
-            <h1 className="text-2xl">
+            <h1 className="text-lg sm:text-xl">{event.team}</h1>
+            <h1 className="text-xl sm:text-2xl">
               {event.away ? "at" : "vs."} {event.opponent}
             </h1>
           </div>

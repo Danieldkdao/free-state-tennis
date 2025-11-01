@@ -25,16 +25,19 @@ const PlayerFilters = () => {
   const levelDropdown: levels[] = ["TBD", "Varsity", "Junior Varsity"];
   return (
     <div>
-      <div className="w-full flex items-center justify-between gap-16">
-        <div className="flex-1 flex items-center ">
-          <FaMagnifyingGlass />
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search for a player..."
-            className="p-2 outline-0 flex-1"
-          />
+      <div className="w-full flex md:flex-row md:items-center md:gap-16 flex-col gap-2">
+        <div className="flex-1">
+          <div className="w-full flex items-center ">
+            <FaMagnifyingGlass />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search for a player..."
+              className="p-2 outline-0 flex-1"
+            />
+          </div>
+          <hr className="md:hidden"/>
         </div>
         <div className="flex items-center gap-4">
           <div className="relative">
@@ -52,7 +55,7 @@ const PlayerFilters = () => {
               />
             </button>
             <div
-              className={`absolute z-[1000] free-green-bg right-0 top-[125%] p-2 rounded transition-opacity duration-200 ease-in-out ${
+              className={`absolute z-[1000] free-green-bg md:right-0 md:left-auto left-0 top-[125%] p-2 rounded transition-opacity duration-200 ease-in-out ${
                 dropdowns.class
                   ? "opacity-100 pointer-events-auto"
                   : "opacity-0 pointer-events-none"
@@ -159,7 +162,7 @@ const PlayerFilters = () => {
           </div>
         </div>
       </div>
-      <hr />
+      <hr className="hidden md:block" />
     </div>
   );
 };

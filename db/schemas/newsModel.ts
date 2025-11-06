@@ -12,7 +12,7 @@ export interface INews extends Document {
   title: string;
   content: string;
   image: Image | null;
-  views: number;
+  views: string[];
   comments: Comment[];
   createdAt: Date;
   updatedAt: Date;
@@ -30,7 +30,7 @@ const NewsSchema = new Schema<INews>(
   {
     title: { type: String, required: true },
     content: { type: String, required: true },
-    views: { type: Number, default: 0 },
+    views: { type: [String], default: [] },
     image: { type: ImageSchema || null },
     comments: { type: [CommentSchema], default: [] },
   },

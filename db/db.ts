@@ -16,7 +16,6 @@ export const connectDB = async () => {
       cached.promise = mongoose
         .connect(MONGODB_URI, {
           dbName: "free-state-tennis",
-          bufferCommands: false,
         })
         .then((mongoose) => {
           console.log("MongoDB database connected successfully!");

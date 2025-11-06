@@ -11,6 +11,7 @@ import { Dispatch, SetStateAction } from "react";
 import toast from "react-hot-toast";
 import { ShowModalData } from "./news-main";
 import { splitDatetime } from "@/components/schedule/Event";
+import { uploadImageClient } from "../players/ss-row";
 
 type ListRowPropTypes = {
   news: News;
@@ -26,7 +27,9 @@ const ListRow = ({ news, setShowModal }: ListRowPropTypes) => {
     defaultImage: news.image?.url || null,
     defaultTitle: news.title,
     submitFunc: async (formData: FormData, file: File | null) => {
-      const response = await updateNews(formData, file, news._id);
+      const imageInfo = await uploadImageClient(file);
+      if (!imageInfo) return toast.error("Failed to upload image.");
+      const response = await updateNews(formData, imageInfo, news._id);
       if (response.success) {
         toast.success(response.message);
         router.refresh();
@@ -55,7 +58,12 @@ const ListRow = ({ news, setShowModal }: ListRowPropTypes) => {
     <>
       <tr className="border max-w-96">
         <td className="py-2 px-3 border">
-          <Image src={news.image?.url || Logo} alt={news.title} width={120} height={45}/>
+          <Image
+            src={news.image?.url || Logo}
+            alt={news.title}
+            width={120}
+            height={45}
+          />
         </td>
         <td className="py-2 px-3 border space-y-2">
           <div className="space-y-1">
@@ -91,7 +99,12 @@ const ListRow = ({ news, setShowModal }: ListRowPropTypes) => {
             </button>
             <button
               onClick={async () => {
-                if(!window.confirm("Are you sure you want to delete this blog? This action cannot be undone.")) return;
+                if (
+                  !window.confirm(
+                    "Are you sure you want to delete this blog? This action cannot be undone."
+                  )
+                )
+                  return;
                 const response = await deleteNews(news._id);
                 if (response.success) {
                   toast.success(response.message);

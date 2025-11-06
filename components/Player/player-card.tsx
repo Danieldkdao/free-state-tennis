@@ -6,7 +6,7 @@ import Link from "next/link";
 
 const PlayerCard = ({ player }: { player: Player }) => {
   return (
-    <div className="relative border overflow-hidden flex flex-col">
+    <div className="relative border overflow-hidden flex flex-col rounded-lg">
       <div className="hover:scale-105 transition-transform duration-100 ease-in-out flex-1">
         {player.image ? (
           <Image

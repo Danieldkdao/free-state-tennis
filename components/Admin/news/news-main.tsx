@@ -8,6 +8,7 @@ import CreateTab from "./create-tab";
 import { createNews, updateNews } from "@/lib/server-actions";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { uploadImageClient } from "../players/ss-row";
 
 export type ShowModalData = {
   buttonText: string;
@@ -27,7 +28,9 @@ const NewsMain = ({ news }: { news: News[] }) => {
     defaultImage: null,
     defaultTitle: "",
     submitFunc: async (formData: FormData, file: File | null) => {
-      const response = await createNews(formData, file);
+      const imageInfo = await uploadImageClient(file);
+      if(!imageInfo) return toast.error("Failed to upload image.");
+      const response = await createNews(formData, imageInfo);
       if(response.success){
         toast.success(response.message);
         router.refresh();

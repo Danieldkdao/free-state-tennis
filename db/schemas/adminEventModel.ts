@@ -13,7 +13,7 @@ export type Image = {
 
 export interface IAdminEvent extends Document {
   _id: string;
-  datetime: string;
+  datetime: Date;
   team: Team;
   away: boolean;
   opponent: string;
@@ -30,7 +30,7 @@ export const ImageSchema = new Schema<Image>(
 );
 
 const AdminEventSchema = new Schema<IAdminEvent>({
-  datetime: { type: String },
+  datetime: { type: Date },
   team: { type: String },
   away: { type: Boolean },
   opponent: { type: String },

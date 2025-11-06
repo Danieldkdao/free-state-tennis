@@ -28,7 +28,7 @@ const Event = ({ event }: { event: EventType }) => {
     : "Not defined";
 
   return (
-    <div className="w-full border p-5 space-y-4 sm:rounded-lg">
+    <div className="w-full border p-5 space-y-4 rounded-lg">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between w-full">
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
@@ -50,7 +50,7 @@ const Event = ({ event }: { event: EventType }) => {
             alt="Event image"
             width={100}
             height={100}
-            className="object-cover"
+            className="object-cover size-24"
           />
         ) : (
           <Image

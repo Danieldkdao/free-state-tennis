@@ -1,8 +1,13 @@
 import { connectDB } from "@/db/db";
 import newsModel from "@/db/schemas/newsModel";
-import { FaCircleXmark, FaPaperPlane } from "react-icons/fa6";
+import { FaCircleXmark } from "react-icons/fa6";
 import Image from "next/image";
 import Logo from "@/public/free-state-logo.png";
+import CommentBox from "@/components/news/comment-box";
+import { News } from "@/lib/types";
+import { auth } from "@/lib/auth/auth";
+import { headers } from "next/headers";
+import crypto from "crypto";
 
 const NewsContentPage = async ({
   params,
@@ -11,8 +16,13 @@ const NewsContentPage = async ({
 }) => {
   const { id } = await params;
   await connectDB();
-  const newsContent = await newsModel.findById(id).lean();
-  if (!newsContent)
+  const h = await headers();
+  const session = await auth.api.getSession({ headers: h });
+  const userId = session
+    ? session.user.id
+    : crypto.randomBytes(64).toString("hex");
+  const newsViews = await newsModel.findOne({ _id: id }).select("views").lean();
+  if (!newsViews)
     return (
       <div className="w-full flex flex-col items-center justify-center gap-4 h-screen">
         <h1 className="text-4xl font-bold text-center">404 News Not Found</h1>
@@ -23,17 +33,23 @@ const NewsContentPage = async ({
         </p>
       </div>
     );
-
+  const newsContent = await newsModel
+    .findOneAndUpdate(
+      { _id: id, views: { $nin: [userId] } },
+      { $push: { views: userId } }
+    )
+    .lean();
+  const news: News = JSON.parse(JSON.stringify(newsContent));
   return (
     <div className="mt-8 flex items-center justify-center w-full">
-      <div className="w-[65%] p-10 border space-y-4">
+      <div className="w-full sm:w-[80%] md:w-[70%] lg:w-[65%] p-10 border space-y-4">
         <div className="space-y-2">
-          <h1 className="text-4xl font-bold">{newsContent.title}</h1>
-          <p>{new Date(newsContent.createdAt).toLocaleDateString()}</p>
-          {newsContent.image ? (
+          <h1 className="text-4xl font-bold">{news.title}</h1>
+          <p>{new Date(news.createdAt).toLocaleDateString()}</p>
+          {news.image ? (
             <Image
-              src={newsContent.image.url}
-              alt={newsContent.title}
+              src={news.image.url}
+              alt={news.title}
               width={800}
               height={400}
               className="object-cover w-full max-h-96"
@@ -47,43 +63,42 @@ const NewsContentPage = async ({
           )}
         </div>
         <div
-          dangerouslySetInnerHTML={{ __html: newsContent.content }}
+          dangerouslySetInnerHTML={{ __html: news.content }}
           className="format-text"
         ></div>
         <hr />
         <div>
           <p>
-            {newsContent.views} views &middot; {newsContent.comments.length}{" "}
-            comments
+            {news.views.length} views &middot; {news.comments.length} comments
           </p>
         </div>
         <div className="mt-8 space-y-4">
           <h1 className="text-2xl font-bold">Comments</h1>
           <div>
-            {newsContent.comments.map((comment, index) => (
-              <div key={index} className="space-y-2 border-y py-4">
+            {news.comments.reverse().map((comment, index) => (
+              <div key={index} className="space-y-2 border-t py-4">
                 <div className="flex items-center w-full gap-4">
                   <h1 className="text-xl flex-1">{comment.user}</h1>
                   <p className="text-sm">
-                    Posted on {new Date(comment.createdAt).toLocaleDateString()}
+                    Posted on{" "}
+                    {new Date(comment.createdAt).toLocaleDateString("en-US", {
+                      month: "short",
+                      day: "numeric",
+                      year: "numeric",
+                    })}{" "}
+                    at{" "}
+                    {new Date(comment.createdAt).toLocaleTimeString("en-US", {
+                      hour: "numeric",
+                      minute: "numeric",
+                      hour12: true,
+                    })}
                   </p>
                 </div>
                 <p className="text-sm">{comment.comment}</p>
               </div>
             ))}
           </div>
-          <div className="space-y-2">
-            <textarea
-              name=""
-              placeholder="Please be respectful when commenting"
-              className="outline-0 p-2 text-sm resize-none w-full border"
-              rows={4}
-            ></textarea>
-            <button className="flex items-center gap-2 free-green-bg py-2 px-5 cursor-pointer text-white">
-              <FaPaperPlane />
-              Post Comment
-            </button>
-          </div>
+          <CommentBox newsId={news._id} />
         </div>
       </div>
     </div>

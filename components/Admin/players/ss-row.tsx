@@ -9,7 +9,6 @@ import {
   deletePlayerRow,
   saveImagePlayers,
   updatePlayerData,
-  getSignature,
   resetImagePlayers,
 } from "@/lib/server-actions";
 import { usePlayer } from "@/hooks/usePlayer";
@@ -30,6 +29,37 @@ export const playingStyles = [
 export const isVarsity = ["TBD", "Varsity", "Junior Varsity"];
 
 export const genders = ["Boy", "Girl"];
+
+export const uploadImageClient = async (file: File | null) => {
+  if(!file) return;
+  const formData = new FormData();
+  formData.append("file", file as Blob);
+  formData.append(
+    "upload_preset",
+    process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET!
+  );
+  formData.append("folder", "free-state-tennis");
+
+  const endpoint = `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`;
+
+  const cloudinaryResponse = await fetch(endpoint, {
+    method: "POST",
+    body: formData,
+  });
+  if (!cloudinaryResponse.ok) {
+    const errorData = await cloudinaryResponse.json();
+    toast.error(errorData.error.message);
+    console.log(errorData.error.message);
+    throw new Error(
+      "Failed to upload cloudinary image: ",
+      errorData.error.message
+    );
+  }
+  const cloudinaryData: UploadApiResponse = await cloudinaryResponse.json();
+  const url = cloudinaryData.secure_url;
+  const publicId = cloudinaryData.public_id;
+  return { url, publicId };
+}
 
 const PlayerSSRow = ({ player }: { player: Player }) => {
   const [formData, setFormData] = useState(player);
@@ -68,40 +98,9 @@ const PlayerSSRow = ({ player }: { player: Player }) => {
     const saveFileToDatabase = async () => {
       setIsSaving(true);
       try {
-        const signatureResponse = await getSignature();
-        if ("error" in signatureResponse) {
-          toast.error("Failed to make signature.");
-          throw new Error(signatureResponse.error);
-        }
-        const { timestamp, signature } = signatureResponse;
-        const formData = new FormData();
-        formData.append("file", file as Blob);
-        formData.append("api_key", process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY!);
-        formData.append("timestamp", timestamp.toString());
-        formData.append("signature", signature);
-        formData.append("folder", "free-state-tennis");
-
-        const endpoint = `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`;
-
-        const cloudinaryResponse = await fetch(endpoint, {
-          method: "POST",
-          body: formData,
-        });
-        if (!cloudinaryResponse.ok) {
-          const errorData = await cloudinaryResponse.json();
-          toast.error(errorData.error.message);
-          console.log(errorData.error.message);
-          throw new Error(
-            "Failed to upload cloudinary image: ",
-            errorData.error.message
-          );
-        }
-        const cloudinaryData: UploadApiResponse =
-          await cloudinaryResponse.json();
-        const url = cloudinaryData.secure_url;
-        const publicId = cloudinaryData.public_id;
-
-        const response = await saveImagePlayers(player._id, { url, publicId });
+        const imageInfo = await uploadImageClient(file);
+        if(!imageInfo) return toast.error("Failed to upload image.");
+        const response = await saveImagePlayers(player._id, imageInfo);
         if (!response.success) {
           toast.error("Failed to save image.");
           throw new Error("Failed to save image.");

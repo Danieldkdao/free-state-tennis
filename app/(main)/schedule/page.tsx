@@ -6,7 +6,7 @@ import NoEventsScheduled from "@/public/no-events-scheduled.png";
 
 const SchedulePage = async () => {
   await connectDB();
-  const data = await eventModel.find();
+  const data = await eventModel.find().sort({ datetime: 1 });
   if (!data.length) {
     return (
       <div className="w-full flex justify-center">

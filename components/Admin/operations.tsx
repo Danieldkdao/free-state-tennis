@@ -46,7 +46,7 @@ const Operations = ({ type }: { type: "player" | "event" }) => {
         Publish
       </button>
       <Link
-        href={type === "player" ? "/roster" : "schedule"}
+        href={type === "player" ? "/roster" : "/schedule"}
         target="_blank"
         className="free-green-bg text-white text-center p-2 cursor-pointer"
       >

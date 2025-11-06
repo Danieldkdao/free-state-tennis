@@ -10,9 +10,9 @@ const AdminLayout = async ({ children }: { children: ReactNode }) => {
   const session = await auth.api.getSession({
     headers: h,
   });
-  if(!session || session.user.role !== "admin"){
-    return redirect("/");
-  }
+  // if(!session || session.user.role !== "admin"){
+  //   return redirect("/");
+  // }
 
   return (
     <div className="w-full flex flex-col h-screen">

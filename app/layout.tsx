@@ -19,7 +19,12 @@ export default function RootLayout({
       <body>
         <PlayerContextProvider>
           {children}
-          <Toaster />
+          <Toaster toastOptions={{
+            className: "z-[100001]",
+            style: {
+              zIndex: 100001
+            }
+          }}/>
         </PlayerContextProvider>
       </body>
     </html>

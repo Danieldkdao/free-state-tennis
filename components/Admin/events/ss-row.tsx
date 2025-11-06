@@ -2,20 +2,19 @@
 
 import Image from "next/image";
 import UploadAreaImage from "@/public/upload_area.png";
-import { Event, Team } from "@/lib/types";
+import { Event } from "@/lib/types";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { usePlayer } from "@/hooks/usePlayer";
 import useDebouncedValue from "@/hooks/useDebouncedValue";
 import {
   deleteEventRow,
-  getSignature,
   resetImageEvents,
   saveImageEvents,
   updateEventData,
 } from "@/lib/server-actions";
-import { UploadApiResponse } from "cloudinary";
 import toast from "react-hot-toast";
 import { FaTrash, FaXmark } from "react-icons/fa6";
+import { uploadImageClient } from "../players/ss-row";
 
 const teamLevels = [
   "Boys Varsity",
@@ -45,7 +44,10 @@ const EventsSSRow = ({ event }: { event: Event }) => {
     const saveToDatabase = async () => {
       setIsSaving(true);
       try {
-        await updateEventData(event._id, debouncedFormData);
+        await updateEventData(event._id, {
+          ...debouncedFormData,
+          datetime: new Date(formData.datetime),
+        });
         setLastSaved(new Date());
       } catch (error) {
         console.error(error);
@@ -62,40 +64,9 @@ const EventsSSRow = ({ event }: { event: Event }) => {
     const saveFileToDatabase = async () => {
       setIsSaving(true);
       try {
-        const signatureResponse = await getSignature();
-        if ("error" in signatureResponse) {
-          toast.error("Failed to make signature.");
-          throw new Error(signatureResponse.error);
-        }
-        const { timestamp, signature } = signatureResponse;
-        const formData = new FormData();
-        formData.append("file", file as Blob);
-        formData.append("api_key", process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY!);
-        formData.append("timestamp", timestamp.toString());
-        formData.append("signature", signature);
-        formData.append("folder", "free-state-tennis");
-
-        const endpoint = `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`;
-
-        const cloudinaryResponse = await fetch(endpoint, {
-          method: "POST",
-          body: formData,
-        });
-        if (!cloudinaryResponse.ok) {
-          const errorData = await cloudinaryResponse.json();
-          toast.error(errorData.error.message);
-          console.log(errorData.error.message);
-          throw new Error(
-            "Failed to upload cloudinary image: ",
-            errorData.error.message
-          );
-        }
-        const cloudinaryData: UploadApiResponse =
-          await cloudinaryResponse.json();
-        const url = cloudinaryData.secure_url;
-        const publicId = cloudinaryData.public_id;
-
-        const response = await saveImageEvents(event._id, { url, publicId });
+        const imageInfo = await uploadImageClient(file);
+        if (!imageInfo) return toast.error("Failed to upload image.");
+        const response = await saveImageEvents(event._id, imageInfo);
         if (!response.success) {
           toast.error("Failed to save image.");
           throw new Error("Failed to save image.");
@@ -111,8 +82,8 @@ const EventsSSRow = ({ event }: { event: Event }) => {
     saveFileToDatabase();
   }, [debouncedFile]);
 
-  const handleChange = (field: keyof Event, value: string | boolean) => {
-    hasChangedFormData.current = true;
+  const handleChange = (field: keyof Event, value: string | boolean | Date) => {
+    if (!hasChangedFormData.current) hasChangedFormData.current = true;
     setFormData((prev) => ({
       ...prev,
       [field]: value,
@@ -156,6 +127,17 @@ const EventsSSRow = ({ event }: { event: Event }) => {
     setLastSaved(new Date());
   };
 
+  const formatDateTimeLocal = (date: Date | string) => {
+    const d = new Date(date);
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, "0");
+    const day = String(d.getDate()).padStart(2, "0");
+    const hours = String(d.getHours()).padStart(2, "0");
+    const minutes = String(d.getMinutes()).padStart(2, "0");
+
+    return `${year}-${month}-${day}T${hours}:${minutes}`;
+  };
+
   return (
     <tr className="border">
       <td className="border">
@@ -195,7 +177,9 @@ const EventsSSRow = ({ event }: { event: Event }) => {
           type="datetime-local"
           id={`datetime_${event._id}`}
           className="py-1 px-2 outline-0"
-          value={formData.datetime || ""}
+          value={
+            formData.datetime ? formatDateTimeLocal(formData.datetime) : ""
+          }
           onChange={(e) => handleChange("datetime", e.target.value)}
         />
       </td>

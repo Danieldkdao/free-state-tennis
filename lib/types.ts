@@ -43,7 +43,7 @@ export type News = {
   title: string;
   content: string;
   image: Image | null;
-  views: number;
+  views: string[];
   comments: Comment[];
   createdAt: Date;
   updatedAt: Date;
@@ -65,7 +65,7 @@ export type Player = {
 
 export type Event = {
   _id: string;
-  datetime: string;
+  datetime: Date;
   team: Team;
   away: boolean;
   opponent: string;

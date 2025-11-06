@@ -4,6 +4,9 @@ import { mongodbAdapter } from 'better-auth/adapters/mongodb';
 import { nextCookies } from 'better-auth/next-js';
 import { createAuthMiddleware } from 'better-auth/api';
 import { admin } from 'better-auth/plugins';
+import { connectDB } from '@/db/db';
+
+await connectDB();
 
 const client = new MongoClient(process.env.DATABASE_URL!);
 const db = client.db();
@@ -13,7 +16,8 @@ export const auth = betterAuth({
     additionalFields: {
       formCompleted: {
         type: "boolean",
-      }
+        defaultValue: false,
+      },
     }
   },
   socialProviders: {
@@ -45,3 +49,5 @@ export const auth = betterAuth({
   },
   plugins: [nextCookies(), admin()],
 });
+
+type Session = typeof auth.$Infer.Session;

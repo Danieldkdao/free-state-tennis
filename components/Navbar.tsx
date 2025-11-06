@@ -35,7 +35,7 @@ const Navbar = () => {
   const notSignedIn = session == null;
 
   return (
-    <div className="w-full flex p-5 items-center justify-between top-0 sticky bg-white z-[10000]">
+    <div className="w-full flex p-5 items-center justify-between top-0 sticky bg-white z-[100]">
       <div className="flex items-center gap-6 md:gap-8">
         <Link href="https://www.freestateathletics.com/" target="_blank">
           <Image

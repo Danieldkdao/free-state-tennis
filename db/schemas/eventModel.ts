@@ -9,7 +9,7 @@ type Team =
 
 export interface IEvent extends Document {
   _id: string;
-  datetime: string;
+  datetime: Date;
   team: Team;
   away: boolean;
   opponent: string;
@@ -18,7 +18,7 @@ export interface IEvent extends Document {
 }
 
 const EventSchema = new Schema<IEvent>({
-  datetime: { type: String, required: true },
+  datetime: { type: Date, required: true },
   team: { type: String, required: true },
   away: { type: Boolean, required: true },
   opponent: { type: String, required: true },

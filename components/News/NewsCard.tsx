@@ -4,7 +4,7 @@ import { News } from "@/lib/types";
 import Link from "next/link";
 import { load } from "cheerio";
 
-const showDateCreated = (d: Date | string | number) => {
+export const showDateCreated = (d: Date | string | number) => {
   const date = new Date(d);
   return date.toLocaleDateString();
 };
@@ -14,7 +14,7 @@ const NewsCard = ({ news }: { news: News }) => {
 
   return (
     <Link href={`/news/${news._id}`}>
-      <div className="flex flex-col md:flex-row w-full border">
+      <div className="flex flex-col md:flex-row w-full border rounded-lg overflow-hidden">
         <div className="flex-1">
           {news.image ? (
             <Image

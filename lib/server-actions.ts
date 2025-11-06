@@ -9,14 +9,13 @@ import { Event, Image, Player, Results } from "./types";
 import { connectDB } from "@/db/db";
 import { revalidatePath } from "next/cache";
 import cloudinary from "@/db/cloudinary";
-import { FormType } from "@/app/(main)/roster/player-form/page";
+import { FormType } from "@/components/player/player-form";
+import userModel from "@/db/schemas/userModel";
 
-export const createNews = async (formData: FormData, file: File | null) => {
+export const createNews = async (formData: FormData, image: Image) => {
   await connectDB();
   const title = formData.get("title") as string;
   const content = formData.get("content") as string;
-
-  const image = await saveImageBuffer(file);
 
   const newNews = new newsModel({
     title,
@@ -44,16 +43,13 @@ export const deleteNews = async (id: string) => {
 
 export const updateNews = async (
   formData: FormData,
-  file: File | null,
+  image: Image,
   id: string
 ) => {
   await connectDB();
   const title = formData.get("title") as string;
   const content = formData.get("content") as string;
 
-  const res = await saveImageBuffer(file);
-  const image =
-    res && "url" in res ? { url: res.url, publicId: res.publicId } : null;
   const data = {
     title,
     content,
@@ -97,14 +93,12 @@ export const addNewRowServer = async (type: "player" | "event") => {
     });
     await newPlayer.save();
   } else if (type === "event") {
-    const date = new Date(Date.now());
-    const isoString = date.toISOString();
     const newEvent = new adminEventModel({
-      datetime: isoString,
+      datetime: new Date(),
       team: "Boys Varsity",
       away: true,
       opponent: "",
-      image: undefined,
+      image: null,
       location: "",
     });
     await newEvent.save();
@@ -121,23 +115,27 @@ export const updatePlayerData = async (id: string, data: Partial<Player>) => {
   };
 };
 
-export const submitPlayerForm = async (formData: FormType, file: File | null) => {
+export const submitPlayerForm = async (
+  formData: FormType,
+  image: Image,
+  userId: string
+) => {
   const results: Results = {
     wins: 0,
     losses: 0,
-  }
-  const image = await saveImageBuffer(file);
+  };
 
-  const newPlayer = {
+  const newPlayer = new adminPlayerModel({
     ...formData,
     image,
     singles: results,
     doubles: results,
     isVarsity: "TBD",
-  }
-
-  
-}
+  });
+  await newPlayer.save();
+  await userModel.findByIdAndUpdate(userId, { $set: { formCompleted: true } });
+  return { success: true, message: "Form completed successfully!" };
+};
 
 export const deletePlayerRow = async (id: string) => {
   await connectDB();
@@ -246,7 +244,7 @@ export const resetImagePlayers = async (id: string) => {
   const oldImage = await adminPlayerModel
     .findByIdAndUpdate(id, { $set: { image: null } })
     .select("image");
-  if(oldImage?.image?.publicId){
+  if (oldImage?.image?.publicId) {
     await deleteImage(oldImage.image.publicId);
   }
   return { success: true, message: "Images reset successfully!" };
@@ -271,47 +269,28 @@ export const deleteImage = async (publicId: string) => {
   }
 };
 
-export const getSignature = async () => {
-  const timestamp = Math.round(new Date().getTime() / 1000);
-
-  const paramsToSign = {
-    timestamp,
-    folder: "free-state-tennis",
+export const postCommentServer = async (
+  comment: string,
+  user: string,
+  newsId: string
+) => {
+  const newComment = {
+    comment,
+    user,
   };
-
-  try {
-    const signature = await cloudinary.utils.api_sign_request(
-      paramsToSign,
-      process.env.CLOUDINARY_API_SECRET!
-    );
-    return { timestamp, signature };
-  } catch (error) {
-    console.error(error);
-    return { error: "Failed to generate signature." };
-  }
+  await newsModel.findByIdAndUpdate(newsId, {
+    $push: { comments: newComment },
+  });
+  return { success: true, message: "Comment posted successfully!" };
 };
 
-export const saveImageBuffer = async (file: File | null) => {
-  if (!file) return null;
+export const incrementNewsViewCount = async (newsId: string) => {
   try {
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
-    const result = await new Promise<any>((resolve, reject) => {
-      cloudinary.uploader
-        .upload_stream(
-          {
-            folder: "free-state-tennis",
-          },
-          (error, result) => {
-            if (error) reject(error);
-            else resolve(result);
-          }
-        )
-        .end(buffer);
-    });
-    return { url: result.secure_url, publicId: result.public_id } as Image;
+    await connectDB();
+    await newsModel.findByIdAndUpdate(newsId, { $inc: { views: 1 } });
+    return { success: true };
   } catch (error) {
-    console.error(error);
-    return null;
+    console.error("Error incrementing view count:", error);
+    return { success: false };
   }
 };

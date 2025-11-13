@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
 import { PlayerContextProvider } from "@/hooks/usePlayer";
+import { AdminNavbarProvider } from "@/hooks/useAdminNavbar";
 
 export const metadata: Metadata = {
   title: "Free State Firebirds Tennis",
@@ -18,13 +19,17 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <PlayerContextProvider>
-          {children}
-          <Toaster toastOptions={{
-            className: "z-[100001]",
-            style: {
-              zIndex: 100001
-            }
-          }}/>
+          <AdminNavbarProvider>
+            {children}
+            <Toaster
+              toastOptions={{
+                className: "z-[100001]",
+                style: {
+                  zIndex: 100001,
+                },
+              }}
+            />
+          </AdminNavbarProvider>
         </PlayerContextProvider>
       </body>
     </html>

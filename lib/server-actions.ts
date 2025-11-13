@@ -11,8 +11,10 @@ import { revalidatePath } from "next/cache";
 import cloudinary from "@/db/cloudinary";
 import { FormType } from "@/components/player/player-form";
 import userModel from "@/db/schemas/userModel";
+import { ResponseCookie } from "next/dist/compiled/@edge-runtime/cookies";
+import { cookies } from "next/headers";
 
-export const createNews = async (formData: FormData, image: Image) => {
+export const createNews = async (formData: FormData, image: Image | null) => {
   await connectDB();
   const title = formData.get("title") as string;
   const content = formData.get("content") as string;
@@ -43,7 +45,7 @@ export const deleteNews = async (id: string) => {
 
 export const updateNews = async (
   formData: FormData,
-  image: Image,
+  image: Image | null,
   id: string
 ) => {
   await connectDB();
@@ -117,7 +119,7 @@ export const updatePlayerData = async (id: string, data: Partial<Player>) => {
 
 export const submitPlayerForm = async (
   formData: FormType,
-  image: Image,
+  image: Image | null,
   userId: string
 ) => {
   const results: Results = {
@@ -230,7 +232,7 @@ export const saveImagePlayers = async (id: string, image: Image) => {
   return { success: true, message: "Image saved successfully!" };
 };
 
-export const saveImageEvents = async (id: string, image: Image) => {
+export const saveImageEvents = async (id: string, image: Image | null) => {
   const oldImage = await adminEventModel
     .findByIdAndUpdate(id, { $set: { image } })
     .select("image");
@@ -282,15 +284,4 @@ export const postCommentServer = async (
     $push: { comments: newComment },
   });
   return { success: true, message: "Comment posted successfully!" };
-};
-
-export const incrementNewsViewCount = async (newsId: string) => {
-  try {
-    await connectDB();
-    await newsModel.findByIdAndUpdate(newsId, { $inc: { views: 1 } });
-    return { success: true };
-  } catch (error) {
-    console.error("Error incrementing view count:", error);
-    return { success: false };
-  }
 };

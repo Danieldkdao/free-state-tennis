@@ -31,7 +31,7 @@ const PlayerCard = ({ player }: { player: Player }) => {
           <h1 className="text-xl font-medium line-clamp-1">{player.name}</h1>
           <p className="text-sm line-clamp-1">
             {player.class} &middot;{" "}
-            {player.isVarsity ? "Varsity" : "Junior Varsity"}
+            {player.isVarsity}
           </p>
         </div>
 

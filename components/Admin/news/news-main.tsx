@@ -29,7 +29,6 @@ const NewsMain = ({ news }: { news: News[] }) => {
     defaultTitle: "",
     submitFunc: async (formData: FormData, file: File | null) => {
       const imageInfo = await uploadImageClient(file);
-      if(!imageInfo) return toast.error("Failed to upload image.");
       const response = await createNews(formData, imageInfo);
       if(response.success){
         toast.success(response.message);
@@ -47,7 +46,7 @@ const NewsMain = ({ news }: { news: News[] }) => {
         onClick={() => {
           setShowModal(createObject);
         }}
-        className="free-green-bg text-white py-2 px-5 cursor-pointer flex items-center gap-2"
+        className="free-green-bg text-white py-2 px-5 cursor-pointer flex items-center gap-2 rounded-lg"
       >
         <FaPlus />
         Create news
@@ -68,9 +67,9 @@ const NewsMain = ({ news }: { news: News[] }) => {
         </tbody>
       </table>
       {showModal && (
-        <div className="bg-red-400">
-          <div className="fixed inset-0 free-green-bg opacity-60"></div>
-          <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-11/12 max-w-lg bg-white rounded-lg p-8 shadow-xl z-50 overflow-y-auto space-y-4 max-h-[550px]">
+        <div>
+          <div className="z-[1001] fixed inset-0 free-green-bg opacity-60"></div>
+          <div className="z-[1002] fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-11/12 max-w-lg bg-white rounded-lg p-8 shadow-xl overflow-y-auto space-y-4 max-h-[550px]">
             <div className="flex items-center w-full justify-between">
               <h1 className="text-2xl font-medium">
                 {showModal.buttonText === "Post news"

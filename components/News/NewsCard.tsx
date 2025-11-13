@@ -38,7 +38,7 @@ const NewsCard = ({ news }: { news: News }) => {
           <p className="line-clamp-4 mb-10">{content}</p>
           <hr />
           <div className="gap-4 flex items-center">
-            <p>{news.views} views</p>
+            <p>{news.views.length} views</p>
             <p>{news.comments.length} comments</p>
           </div>
         </div>

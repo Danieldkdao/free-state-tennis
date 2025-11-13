@@ -83,7 +83,7 @@ const CreateTab = ({
       className="flex flex-col gap-4 items-start"
     >
       <div className="space-y-2 group relative">
-        <p>Image</p>
+        <p>Image (optional)</p>
         <label htmlFor="image" className="cursor-pointer">
           {previewUrl ? (
             <img src={previewUrl} alt="image" />

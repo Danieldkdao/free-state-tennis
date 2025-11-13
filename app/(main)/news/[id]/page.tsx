@@ -8,21 +8,43 @@ import { News } from "@/lib/types";
 import { auth } from "@/lib/auth/auth";
 import { headers } from "next/headers";
 import crypto from "crypto";
+import CommentSection from "@/components/news/comment-section";
 
-const NewsContentPage = async ({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) => {
-  const { id } = await params;
+const NewsContentPage = async (props: PageProps<"/news/[id]">) => {
+  const { id } = await props.params;
+
   await connectDB();
   const h = await headers();
   const session = await auth.api.getSession({ headers: h });
-  const userId = session
-    ? session.user.id
-    : crypto.randomBytes(64).toString("hex");
-  const newsViews = await newsModel.findOne({ _id: id }).select("views").lean();
-  if (!newsViews)
+
+  let newsContent: News | null = null;
+
+  if (session) {
+    const userId = session.user.id;
+    newsContent = await newsModel
+      .findOneAndUpdate(
+        { _id: id, views: { $nin: [userId] } },
+        { $push: { views: userId } },
+        { new: true }
+      )
+      .lean();
+    if (!newsContent) {
+      newsContent = await newsModel.findById(id).lean();
+    }
+  } else {
+    const userId = crypto.randomBytes(64).toString("hex");
+    newsContent = await newsModel
+      .findByIdAndUpdate(
+        id,
+        {
+          $push: { views: userId },
+        },
+        { new: true }
+      )
+      .lean();
+  }
+
+  if (!newsContent) {
     return (
       <div className="w-full flex flex-col items-center justify-center gap-4 h-screen">
         <h1 className="text-4xl font-bold text-center">404 News Not Found</h1>
@@ -33,19 +55,19 @@ const NewsContentPage = async ({
         </p>
       </div>
     );
-  const newsContent = await newsModel
-    .findOneAndUpdate(
-      { _id: id, views: { $nin: [userId] } },
-      { $push: { views: userId } }
-    )
-    .lean();
+  }
+
   const news: News = JSON.parse(JSON.stringify(newsContent));
+  const comments = news.comments.reverse();
+
   return (
     <div className="mt-8 flex items-center justify-center w-full">
-      <div className="w-full sm:w-[80%] md:w-[70%] lg:w-[65%] p-10 border space-y-4">
+      <div className="w-full sm:w-[80%] md:w-[70%] lg:w-[65%] p-10 border space-y-4 rounded-md">
         <div className="space-y-2">
           <h1 className="text-4xl font-bold">{news.title}</h1>
-          <p>{new Date(news.createdAt).toLocaleDateString()}</p>
+          <p className="mb-4 text-xl">
+            {new Date(news.createdAt).toLocaleDateString()}
+          </p>
           {news.image ? (
             <Image
               src={news.image.url}
@@ -74,30 +96,7 @@ const NewsContentPage = async ({
         </div>
         <div className="mt-8 space-y-4">
           <h1 className="text-2xl font-bold">Comments</h1>
-          <div>
-            {news.comments.reverse().map((comment, index) => (
-              <div key={index} className="space-y-2 border-t py-4">
-                <div className="flex items-center w-full gap-4">
-                  <h1 className="text-xl flex-1">{comment.user}</h1>
-                  <p className="text-sm">
-                    Posted on{" "}
-                    {new Date(comment.createdAt).toLocaleDateString("en-US", {
-                      month: "short",
-                      day: "numeric",
-                      year: "numeric",
-                    })}{" "}
-                    at{" "}
-                    {new Date(comment.createdAt).toLocaleTimeString("en-US", {
-                      hour: "numeric",
-                      minute: "numeric",
-                      hour12: true,
-                    })}
-                  </p>
-                </div>
-                <p className="text-sm">{comment.comment}</p>
-              </div>
-            ))}
-          </div>
+          <CommentSection comments={comments} />
           <CommentBox newsId={news._id} />
         </div>
       </div>

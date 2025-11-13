@@ -28,7 +28,6 @@ const ListRow = ({ news, setShowModal }: ListRowPropTypes) => {
     defaultTitle: news.title,
     submitFunc: async (formData: FormData, file: File | null) => {
       const imageInfo = await uploadImageClient(file);
-      if (!imageInfo) return toast.error("Failed to upload image.");
       const response = await updateNews(formData, imageInfo, news._id);
       if (response.success) {
         toast.success(response.message);
@@ -73,7 +72,7 @@ const ListRow = ({ news, setShowModal }: ListRowPropTypes) => {
             </p>
           </div>
           <div className="space-y-1">
-            <p className="font-bold">Updated At</p>
+            <p className="font-bold">Last Updated</p>
             <p className="whitespace-nowrap">
               {dateUpdatedAt} at {timeUpdatedAt}
             </p>

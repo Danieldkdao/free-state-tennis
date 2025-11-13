@@ -25,6 +25,17 @@ const teamLevels = [
 
 const away = ["Yes", "No"];
 
+export const formatDateTimeLocal = (date: Date | string) => {
+  const d = new Date(date);
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  const hours = String(d.getHours()).padStart(2, "0");
+  const minutes = String(d.getMinutes()).padStart(2, "0");
+
+  return `${year}-${month}-${day}T${hours}:${minutes}`;
+};
+
 const EventsSSRow = ({ event }: { event: Event }) => {
   const [formData, setFormData] = useState(event);
   const { setIsSaving, setLastSaved } = usePlayer();
@@ -65,7 +76,6 @@ const EventsSSRow = ({ event }: { event: Event }) => {
       setIsSaving(true);
       try {
         const imageInfo = await uploadImageClient(file);
-        if (!imageInfo) return toast.error("Failed to upload image.");
         const response = await saveImageEvents(event._id, imageInfo);
         if (!response.success) {
           toast.error("Failed to save image.");
@@ -125,17 +135,6 @@ const EventsSSRow = ({ event }: { event: Event }) => {
     }
     setIsSaving(false);
     setLastSaved(new Date());
-  };
-
-  const formatDateTimeLocal = (date: Date | string) => {
-    const d = new Date(date);
-    const year = d.getFullYear();
-    const month = String(d.getMonth() + 1).padStart(2, "0");
-    const day = String(d.getDate()).padStart(2, "0");
-    const hours = String(d.getHours()).padStart(2, "0");
-    const minutes = String(d.getMinutes()).padStart(2, "0");
-
-    return `${year}-${month}-${day}T${hours}:${minutes}`;
   };
 
   return (

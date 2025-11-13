@@ -31,7 +31,7 @@ export const isVarsity = ["TBD", "Varsity", "Junior Varsity"];
 export const genders = ["Boy", "Girl"];
 
 export const uploadImageClient = async (file: File | null) => {
-  if(!file) return;
+  if(!file) return null;
   const formData = new FormData();
   formData.append("file", file as Blob);
   formData.append(
@@ -50,10 +50,6 @@ export const uploadImageClient = async (file: File | null) => {
     const errorData = await cloudinaryResponse.json();
     toast.error(errorData.error.message);
     console.log(errorData.error.message);
-    throw new Error(
-      "Failed to upload cloudinary image: ",
-      errorData.error.message
-    );
   }
   const cloudinaryData: UploadApiResponse = await cloudinaryResponse.json();
   const url = cloudinaryData.secure_url;

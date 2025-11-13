@@ -14,6 +14,7 @@ const Operations = ({ type }: { type: "player" | "event" }) => {
   const addNewRow = async () => {
     await addNewRowServer(type);
     router.refresh();
+    toast.success("New row added!")
   };
 
   const handlePublish = async () => {
@@ -32,25 +33,25 @@ const Operations = ({ type }: { type: "player" | "event" }) => {
   };
 
   return (
-    <div className="sticky left-0 top-0 z-10 pb-4 bg-white flex items-center gap-4">
+    <div className="sticky left-0 top-0 z-10 pb-4 bg-white inline-flex items-center flex-wrap gap-4">
       <button
         onClick={addNewRow}
-        className="free-green-bg text-white text-center py-2 px-5 cursor-pointer"
+        className="free-green-bg text-white text-center py-2 px-5 cursor-pointer rounded-lg"
       >
         Add row
       </button>
       <button
         onClick={handlePublish}
-        className="free-green-bg text-white text-center py-2 px-5 cursor-pointer"
+        className="free-green-bg text-white text-center py-2 px-5 cursor-pointer rounded-lg"
       >
         Publish
       </button>
       <Link
         href={type === "player" ? "/roster" : "/schedule"}
         target="_blank"
-        className="free-green-bg text-white text-center p-2 cursor-pointer"
+        className="free-green-bg text-white text-center p-2 cursor-pointer rounded-lg"
       >
-        <FaSquareArrowUpRight size={25}/>
+        <FaSquareArrowUpRight size={25} />
       </Link>
       <div className="text-sm">
         {isSaving && <span className="text-yellow-600">💾 Saving...</span>}

@@ -62,15 +62,9 @@ const PlayerForm = ({
     }
 
     const imageInfo = await uploadImageClient(file);
-    if (!imageInfo) {
-      toast.error("Failed to upload image.");
-      return;
-    }
-    console.log(imageInfo);
     const response = await submitPlayerForm(data, imageInfo, session.user.id);
-    console.log(response);
     if (response.success) {
-      router.refresh();
+      router.push("/");
       toast.success(response.message);
     } else {
       toast.error("Something went wrong.");

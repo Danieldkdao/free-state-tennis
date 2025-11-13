@@ -49,4 +49,4 @@ export const auth = betterAuth({
   plugins: [nextCookies(), admin()],
 });
 
-export type Session = typeof auth.$Infer.Session;
+type Session = typeof auth.$Infer.Session;

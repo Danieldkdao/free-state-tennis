@@ -1,5 +1,5 @@
-import EventsSSRow from "@/components/admin/events/ss-row";
-import Operations from "@/components/admin/operations";
+import EventsSSRow from "@/components/Admin/events/ss-row";
+import Operations from "@/components/Admin/operations";
 import { connectDB } from "@/db/db";
 import adminEventModel from "@/db/schemas/adminEventModel";
 

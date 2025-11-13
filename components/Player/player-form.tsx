@@ -10,7 +10,7 @@ import { FaXmark } from "react-icons/fa6";
 import { Session } from "@/lib/auth/auth-client";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
-import { uploadImageClient } from "@/components/admin/players/ss-row";
+import { uploadImageClient } from "../Admin/players/ss-row";
 import { submitPlayerForm } from "@/lib/server-actions";
 import LoadingSpinner from "@/components/loading-spinner";
 

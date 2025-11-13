@@ -1,5 +1,5 @@
-import Operations from "@/components/admin/operations";
-import PlayerSSRow from "@/components/admin/players/ss-row";
+import Operations from "@/components/Admin/operations";
+import PlayerSSRow from "@/components/Admin/players/ss-row";
 import CopyButton from "@/components/copy-button";
 import { connectDB } from "@/db/db";
 import adminPlayerModel from "@/db/schemas/adminPlayerSchema";
@@ -52,19 +52,3 @@ const PlayersPage = async () => {
 };
 
 export default PlayersPage;
-
-{
-  /* <div className="flex items-end gap-2">
-  <div className="flex flex-col gap-2">
-    <label htmlFor="toggle-form">Enable form</label>
-    <input
-      id="toggle-form"
-      type="checkbox"
-      className="appearance-none w-15 h-8 bg-gray-200 rounded-full relative transition-colors duration-300 cursor-pointer after:content-[''] after:size-5 after:rounded-full after:bg-white after:absolute after:top-1/2 after:left-1/4 after:-translate-1/2 after:transition-all after:duration-300 checked:bg-green-950 checked:after:left-[70%]"
-    />
-  </div>
-  <div className="flex items-center gap-1">
-    <CopyButton text="http://localhost:3000/players/form" />
-  </div>
-</div> */
-}

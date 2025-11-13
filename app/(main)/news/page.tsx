@@ -3,7 +3,7 @@ import newsModel from "@/db/schemas/newsModel";
 import { News } from "@/lib/types";
 import Image from "next/image";
 import NoNewsCurrently from "@/public/no-news-currently.png";
-import NewsMain from "@/components/news/news-main";
+import NewsMain from "@/components/News/news-main";
 
 const NewsPage = async () => {
   await connectDB();

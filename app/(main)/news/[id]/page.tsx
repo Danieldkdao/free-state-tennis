@@ -3,12 +3,12 @@ import newsModel from "@/db/schemas/newsModel";
 import { FaCircleXmark } from "react-icons/fa6";
 import Image from "next/image";
 import Logo from "@/public/free-state-logo.png";
-import CommentBox from "@/components/news/comment-box";
+import CommentBox from "@/components/News/comment-box";
 import { News } from "@/lib/types";
 import { auth } from "@/lib/auth/auth";
 import { headers } from "next/headers";
 import crypto from "crypto";
-import CommentSection from "@/components/news/comment-section";
+import CommentSection from "@/components/News/comment-section";
 
 const NewsContentPage = async (props: PageProps<"/news/[id]">) => {
   const { id } = await props.params;

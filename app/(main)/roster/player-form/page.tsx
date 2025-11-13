@@ -3,7 +3,7 @@ import Logo from "@/public/free-state-logo.png";
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth/auth";
 import { headers } from "next/headers";
-import PlayerForm from "@/components/player/player-form";
+import PlayerForm from "@/components/Player/player-form";
 
 const RosterFormPage = async () => {
   const h = await headers();

@@ -13,7 +13,7 @@ import newsModel from "@/db/schemas/newsModel";
 import eventModel from "@/db/schemas/eventModel";
 import { Event, News } from "@/lib/types";
 import { load } from "cheerio";
-import { showDateCreated } from "@/components/news/news-card";
+import { showDateCreated } from "@/components/News/news-card";
 import Link from "next/link";
 import { splitDatetime } from "@/components/schedule/Event";
 

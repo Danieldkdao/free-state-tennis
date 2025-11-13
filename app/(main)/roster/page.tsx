@@ -1,5 +1,5 @@
-import PlayerFilters from "@/components/player/filters";
-import PlayerGrid from "@/components/player/player-grid";
+import PlayerFilters from "@/components/Player/filters";
+import PlayerGrid from "@/components/Player/player-grid";
 import { connectDB } from "@/db/db";
 import playerModel from "@/db/schemas/playerSchema";
 import Image from "next/image";

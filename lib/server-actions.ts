@@ -9,7 +9,7 @@ import { Event, Image, Player, Results } from "./types";
 import { connectDB } from "@/db/db";
 import { revalidatePath } from "next/cache";
 import cloudinary from "@/db/cloudinary";
-import { FormType } from "@/components/player/player-form";
+import { FormType } from "@/components/Player/player-form";
 import userModel from "@/db/schemas/userModel";
 
 export const createNews = async (formData: FormData, image: Image | null) => {

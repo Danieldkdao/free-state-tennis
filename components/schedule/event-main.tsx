@@ -1,6 +1,6 @@
 "use client";
 import { FaChevronRight, FaMagnifyingGlass } from "react-icons/fa6";
-import Event from "./Event";
+import Event from "./event";
 import { Event as EventType, Team } from "@/lib/types";
 import { useEffect, useState, useRef, useCallback } from "react";
 import { formatDateTimeLocal } from "../admin/events/ss-row";

@@ -1,4 +1,4 @@
-import NewsCard from "@/components/news/NewsCard";
+import NewsCard from "@/components/news/news-card";
 import { connectDB } from "@/db/db";
 import newsModel from "@/db/schemas/newsModel";
 import { News } from "@/lib/types";
@@ -21,7 +21,7 @@ const NewsPage = async () => {
   return (
     <div className="w-full mt-8 space-y-4">
       <h1 className="text-4xl font-bold">All News</h1>
-      <NewsMain news={news}/>
+      <NewsMain news={news} />
     </div>
   );
 };

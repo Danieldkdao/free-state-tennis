@@ -1,8 +1,12 @@
 "use client";
 
 import { News } from "@/lib/types";
-import NewsCard from "./NewsCard";
-import { FaChevronLeft, FaChevronRight, FaMagnifyingGlass } from "react-icons/fa6";
+import NewsCard from "./news-card";
+import {
+  FaChevronLeft,
+  FaChevronRight,
+  FaMagnifyingGlass,
+} from "react-icons/fa6";
 import { useEffect, useState } from "react";
 import { DateRangeStateType } from "../schedule/event-main";
 import { formatDateTimeLocal } from "../admin/events/ss-row";
@@ -183,38 +187,35 @@ const NewsMain = ({ news }: { news: News[] }) => {
       </div>
       <div className="flex justify-center w-full">
         {totalPages > 1 && (
-        <div className="flex items-center">
-          <button
-            onClick={handlePrevPage}
-            disabled={currentPage === 1}
-            className="py-2 pr-4 rounded-md cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            <FaChevronLeft />
-          </button>
-          {getPageNumbers().map((pageNumber) => (
+          <div className="flex items-center">
             <button
-              key={pageNumber}
-              onClick={() => handlePageClick(pageNumber)}
-              className={`py-2 px-4 rounded-md cursor-pointer mx-1 ${
-                currentPage === pageNumber
-                  ? "free-green-bg text-white"
-                  : ""
-              }`}
+              onClick={handlePrevPage}
+              disabled={currentPage === 1}
+              className="py-2 pr-4 rounded-md cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {pageNumber}
+              <FaChevronLeft />
             </button>
-          ))}
-          <button
-            onClick={handleNextPage}
-            disabled={currentPage === totalPages}
-            className="py-2 pl-4 rounded-md cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            <FaChevronRight />
-          </button>
-        </div>
-      )}
+            {getPageNumbers().map((pageNumber) => (
+              <button
+                key={pageNumber}
+                onClick={() => handlePageClick(pageNumber)}
+                className={`py-2 px-4 rounded-md cursor-pointer mx-1 ${
+                  currentPage === pageNumber ? "free-green-bg text-white" : ""
+                }`}
+              >
+                {pageNumber}
+              </button>
+            ))}
+            <button
+              onClick={handleNextPage}
+              disabled={currentPage === totalPages}
+              className="py-2 pl-4 rounded-md cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <FaChevronRight />
+            </button>
+          </div>
+        )}
       </div>
-      
     </div>
   );
 };

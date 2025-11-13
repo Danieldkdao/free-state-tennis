@@ -1,5 +1,5 @@
-import Footer from "@/components/Footer";
-import Navbar from "@/components/Navbar";
+import Footer from "@/components/footer";
+import Navbar from "@/components/navbar";
 import Placeholder1 from "@/public/placeholder-1.png";
 import Placeholder2 from "@/public/placeholder-2.png";
 import FreeStateLogo from "@/public/free-state-logo.png";
@@ -14,9 +14,9 @@ import newsModel from "@/db/schemas/newsModel";
 import eventModel from "@/db/schemas/eventModel";
 import { Event, News } from "@/lib/types";
 import { load } from "cheerio";
-import { showDateCreated } from "@/components/news/NewsCard";
+import { showDateCreated } from "@/components/news/news-card";
 import Link from "next/link";
-import { splitDatetime } from "@/components/schedule/Event";
+import { splitDatetime } from "@/components/schedule/event";
 
 const Home = async () => {
   await connectDB();
@@ -164,10 +164,14 @@ const Home = async () => {
                         className="border border-white p-5 flex flex-col items-center gap-2 rounded-lg"
                       >
                         <h1 className="text-2xl text-center text-white line-clamp-1">
-                          {`Free State ${item.away ? "at" : "vs."} ${item.opponent}`}
+                          {`Free State ${item.away ? "at" : "vs."} ${
+                            item.opponent
+                          }`}
                         </h1>
                         <div className="flex flex-col items-center text-white text-center w-full gap-2">
-                          <p className="flex-1">{splitDatetime(item.datetime).date}</p>
+                          <p className="flex-1">
+                            {splitDatetime(item.datetime).date}
+                          </p>
                           <p className="text-center">{item.location}</p>
                         </div>
                         <div className="flex items-center justify-center gap-2 my-2">
@@ -191,7 +195,10 @@ const Home = async () => {
                             className="size-13 object-cover"
                           />
                         </div>
-                        <Link href="/schedule" className="bg-white px-10 py-2 free-green-text cursor-pointer rounded-lg">
+                        <Link
+                          href="/schedule"
+                          className="bg-white px-10 py-2 free-green-text cursor-pointer rounded-lg"
+                        >
                           More info
                         </Link>
                       </div>

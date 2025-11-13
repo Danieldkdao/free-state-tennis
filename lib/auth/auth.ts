@@ -1,8 +1,7 @@
-import { APIError, betterAuth } from 'better-auth';
+import { betterAuth } from 'better-auth';
 import { MongoClient } from 'mongodb';
 import { mongodbAdapter } from 'better-auth/adapters/mongodb';
 import { nextCookies } from 'better-auth/next-js';
-import { createAuthMiddleware } from 'better-auth/api';
 import { admin } from 'better-auth/plugins';
 import { connectDB } from '@/db/db';
 

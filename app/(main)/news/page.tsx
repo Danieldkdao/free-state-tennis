@@ -1,4 +1,3 @@
-import NewsCard from "@/components/news/news-card";
 import { connectDB } from "@/db/db";
 import newsModel from "@/db/schemas/newsModel";
 import { News } from "@/lib/types";

@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const MONGODB_URI = process.env.DATABASE_URL!;
 
-let cached = (global as any).mongoose || { conn: null, promise: null };
+const cached = (global as any).mongoose || { conn: null, promise: null };
 
 export const connectDB = async () => {
   if (!MONGODB_URI)

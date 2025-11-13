@@ -11,8 +11,6 @@ import { revalidatePath } from "next/cache";
 import cloudinary from "@/db/cloudinary";
 import { FormType } from "@/components/player/player-form";
 import userModel from "@/db/schemas/userModel";
-import { ResponseCookie } from "next/dist/compiled/@edge-runtime/cookies";
-import { cookies } from "next/headers";
 
 export const createNews = async (formData: FormData, image: Image | null) => {
   await connectDB();

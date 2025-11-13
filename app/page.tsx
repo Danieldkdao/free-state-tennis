@@ -6,7 +6,7 @@ import FreeStateLogo from "@/public/free-state-logo.png";
 import NoScheduledEvents from "@/public/no-events-scheduled-home.png";
 import RacketsWhite from "@/public/racket-cross-icon-white.png";
 import Image from "next/image";
-import { FaArrowRight, FaCalendar, FaEye, FaX } from "react-icons/fa6";
+import { FaArrowRight, FaCalendar, FaEye } from "react-icons/fa6";
 import Marquee from "react-fast-marquee";
 import { connectDB } from "@/db/db";
 import newsModel from "@/db/schemas/newsModel";
@@ -213,7 +213,7 @@ const Home = async () => {
           <Marquee speed={60} pauseOnHover={true}>
             {infiniteRow.map((item, index) => {
               return (
-                <div className="mx-5 h-full rounded-lg overflow-hidden">
+                <div key={index} className="mx-5 h-full rounded-lg overflow-hidden">
                   {item}
                 </div>
               );

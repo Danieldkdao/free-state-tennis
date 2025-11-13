@@ -180,11 +180,13 @@ const EventMain = ({ events }: { events: EventType[] }) => {
                     type="checkbox"
                     onChange={() => {
                       const truefalse = item === "Away";
-                      homeFilters.includes(truefalse)
-                        ? setHomeFilters(
-                            homeFilters.filter((item) => item !== truefalse)
-                          )
-                        : setHomeFilters((prev) => [...prev, truefalse]);
+                      if (homeFilters.includes(truefalse)) {
+                        setHomeFilters(
+                          homeFilters.filter((item) => item !== truefalse)
+                        );
+                      } else {
+                        setHomeFilters((prev) => [...prev, truefalse]);
+                      }
                     }}
                     id={item}
                     className="cursor-pointer"
@@ -205,11 +207,11 @@ const EventMain = ({ events }: { events: EventType[] }) => {
                   <input
                     type="checkbox"
                     onChange={() => {
-                      levelFilters.includes(item)
-                        ? setLevelFilters(
-                            levelFilters.filter((level) => level !== item)
-                          )
-                        : setLevelFilters((prev) => [...prev, item]);
+                      if (levelFilters.includes(item))
+                        setLevelFilters(
+                          levelFilters.filter((level) => level !== item)
+                        );
+                      else setLevelFilters((prev) => [...prev, item]);
                     }}
                     id={item}
                     className="cursor-pointer"

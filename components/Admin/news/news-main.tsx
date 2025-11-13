@@ -5,7 +5,7 @@ import ListRow from "./list-row";
 import { useState } from "react";
 import { FaCircleXmark, FaPlus } from "react-icons/fa6";
 import CreateTab from "./create-tab";
-import { createNews, updateNews } from "@/lib/server-actions";
+import { createNews } from "@/lib/server-actions";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { uploadImageClient } from "../players/ss-row";

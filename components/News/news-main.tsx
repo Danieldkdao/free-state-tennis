@@ -9,7 +9,7 @@ import {
 } from "react-icons/fa6";
 import { useEffect, useState } from "react";
 import { DateRangeStateType } from "../schedule/event-main";
-import { formatDateTimeLocal } from "../admin/events/ss-row";
+import { formatDateTimeLocal } from "../Admin/events/ss-row";
 
 const NewsMain = ({ news }: { news: News[] }) => {
   const [searchQuery, setSearchQuery] = useState("");

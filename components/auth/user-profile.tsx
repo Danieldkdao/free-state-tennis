@@ -9,7 +9,6 @@ import {
   FaCircleUser,
   FaRegClipboard,
   FaRegHardDrive,
-  FaRegUser,
   FaRightToBracket,
 } from "react-icons/fa6";
 import { useRouter } from "next/navigation";
@@ -63,13 +62,6 @@ const UserProfile = () => {
             Player Form
           </Link>
         )}
-        <Link
-          href="/"
-          className="hover:bg-gray-300 py-1 px-2 rounded flex items-center gap-2"
-        >
-          <FaRegUser />
-          Settings
-        </Link>
         <button
           className="hover:bg-gray-300 py-1 px-2 rounded flex items-center gap-2 cursor-pointer"
           onClick={async () => {

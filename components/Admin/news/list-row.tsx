@@ -10,7 +10,7 @@ import { News } from "@/lib/types";
 import { Dispatch, SetStateAction } from "react";
 import toast from "react-hot-toast";
 import { ShowModalData } from "./news-main";
-import { splitDatetime } from "@/components/schedule/event";
+import { splitDatetime } from "@/components/schedule/Event";
 import { uploadImageClient } from "../players/ss-row";
 
 type ListRowPropTypes = {

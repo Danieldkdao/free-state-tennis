@@ -1,4 +1,4 @@
-import AdminNavbar from "@/components/admin/navbar";
+import AdminNavbar from "@/components/admin/Navbar";
 import AdminSidebar from "@/components/admin/sidebar";
 import { ReactNode } from "react";
 import { auth } from "@/lib/auth/auth";

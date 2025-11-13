@@ -1,9 +1,8 @@
-import Footer from "@/components/footer";
-import Navbar from "@/components/navbar";
+import Footer from "@/components/Footer";
+import Navbar from "@/components/Navbar";
 import Placeholder1 from "@/public/placeholder-1.png";
 import Placeholder2 from "@/public/placeholder-2.png";
 import FreeStateLogo from "@/public/free-state-logo.png";
-import LionsLogo from "@/public/chestylogo.png";
 import NoScheduledEvents from "@/public/no-events-scheduled-home.png";
 import RacketsWhite from "@/public/racket-cross-icon-white.png";
 import Image from "next/image";
@@ -16,7 +15,7 @@ import { Event, News } from "@/lib/types";
 import { load } from "cheerio";
 import { showDateCreated } from "@/components/news/news-card";
 import Link from "next/link";
-import { splitDatetime } from "@/components/schedule/event";
+import { splitDatetime } from "@/components/schedule/Event";
 
 const Home = async () => {
   await connectDB();
